@@ -16,6 +16,9 @@ jobs:
       - name: Install swiftlint
         run: brew install swiftlint
 
+      - name: Check SwiftLint Version
+        run: swiftlint version
+
       # 危険なコードをなくすため、SwiftLintの黄色いエラーを無視しないようにする
       - name: Run swiftlint
         run: swiftlint lint --strict
