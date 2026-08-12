@@ -2,7 +2,7 @@ name: EaReader CI
 
 on:
   pull_request:
-  workflow-dispatch:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -19,9 +19,9 @@ jobs:
 
           xcodebuild \
             -project EaReader.xcodeproj \
-            -scheme EaReader
+            -scheme EaReader \
             -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.0' \
-            -only-testing: EaReaderTests \
+            -only-testing:EaReaderTests \
             -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO \
             test
