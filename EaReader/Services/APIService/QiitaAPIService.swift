@@ -134,7 +134,9 @@ enum QiitaAPIService: PaginatedFeedProvider {
             .map { pages in
                 pages
                     .flatMap { $0 }
-                    .map(makeArticle)
+                    .map { article in
+                        makeArticle(from: article)
+                    }
             }
             .eraseToAnyPublisher()
     }
@@ -173,7 +175,6 @@ enum QiitaAPIService: PaginatedFeedProvider {
     
     // MARK: Articleに変換
     
-    @MainActor
     private static func makeArticle(from qiitaItem: QiitaItem) -> Article {
         let now = Date()
         let summary = qiitaItem.body.map {

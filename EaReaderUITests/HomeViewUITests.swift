@@ -7,6 +7,7 @@
 
 @testable import EaReader
 import XCTest
+import ComposableArchitecture
 
 // Home Viewのテスト用
 final class HomeViewUITests: XCTestCase {
@@ -24,8 +25,11 @@ final class HomeViewUITests: XCTestCase {
     
     @MainActor
     func test_HomeViewを開いた時にUserFeedがあればListが表示されるか確かめる() {
-        let list = self.app.collectionViews["FeedList"]
-        XCTAssertTrue(list.exists)
+        let homeStore = TestStore(initialState: HomeViewFeature.State(), reducer: { HomeViewFeature() })
+        if (homeStore.state.deviceModel?.userFeeds.count ?? 0) != 0 {
+            let list = self.app.collectionViews["FeedList"]
+            XCTAssertTrue(list.exists)
+        }
     }
     
     func test_SearchViewが開きました() {

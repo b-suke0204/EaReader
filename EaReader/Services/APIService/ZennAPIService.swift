@@ -129,7 +129,9 @@ enum ZennAPIService: PaginatedFeedProvider {
             .map { pages in
                 pages
                     .flatMap { $0 }
-                    .map(makeArticle)
+                    .map { article in
+                        makeArticle(from: article)
+                    }
             }
             .eraseToAnyPublisher()
     }
@@ -175,7 +177,6 @@ enum ZennAPIService: PaginatedFeedProvider {
     
     // MARK: Articleに変換
     
-    @MainActor
     private static func makeArticle(from article: ZennArticle) -> Article {
         let now = Date()
         return Article(

@@ -78,7 +78,9 @@ enum DevToAPIService: PaginatedFeedProvider {
             .map { pages in
                 pages
                     .flatMap { $0 }
-                    .map(makeFeedItem)
+                    .map { article in
+                        makeFeedItem(from: article)
+                    }
             }
             .eraseToAnyPublisher()
     }

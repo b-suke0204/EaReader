@@ -157,7 +157,9 @@ enum GitHubAPIService: PaginatedFeedProvider {
             }
         case .userActivity(let user):
             return fetchPaged(path: "/users/\(user)/events/public") { (events: [UserEvent]) in
-                events.map(makeArticle)
+                events.map { article in
+                    makeArticle(from: article)
+                }
             }
         case nil:
             return Just([])
@@ -285,7 +287,6 @@ enum GitHubAPIService: PaginatedFeedProvider {
     }
     
     // UserEventからArticle作成
-    @MainActor
     private static func makeArticle(from event: UserEvent) -> Article {
         let now = Date()
         let link = URL(
