@@ -39,5 +39,3 @@ struct Device: DeviceType {
         case updatedAt = "updated_at"
     }
 }
-
-

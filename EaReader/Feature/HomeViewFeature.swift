@@ -112,9 +112,5 @@ struct HomeViewFeature {
     }
 }
 
-
 extension HomeViewFeature.Destination.State: Equatable {}
 extension HomeViewFeature.Path.State: Equatable {}
-
-
-

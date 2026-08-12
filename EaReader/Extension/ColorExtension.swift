@@ -12,6 +12,3 @@ extension Color {
     static let noRead: Color = Color(red: 0/255, green: 150/255, blue: 255/255)
     static let archive: Color = Color(red: 170/255, green: 170/255, blue: 170/255)
 }
-
-
-

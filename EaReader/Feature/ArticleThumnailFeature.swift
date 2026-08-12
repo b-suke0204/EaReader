@@ -14,7 +14,7 @@ struct ArticleThumnailFeature {
     
     @ObservableState
     struct State: Equatable {
-        var resolveURL: URL? = nil
+        var resolveURL: URL?
         var didFinishResolving = false
     }
     
@@ -62,7 +62,3 @@ struct ArticleThumnailFeature {
         return resolveURL
     }
 }
-
-
-
-

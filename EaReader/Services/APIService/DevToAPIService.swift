@@ -49,13 +49,13 @@ enum DevToAPIService: PaginatedFeedProvider {
         
         return components[2].removingPercentEncoding ?? components[2]
     }
-
+    
     // PaginatedFeedProviderの処理 ここから
     
     static func canHandle(feedURL: URL) -> Bool {
         tagName(fromFeedURL: feedURL) != nil
     }
-
+    
     static func fallbackTitle(feedURL: URL) -> String {
         guard let tag = tagName(fromFeedURL: feedURL) else {
             return "DEV Community"
@@ -123,8 +123,9 @@ enum DevToAPIService: PaginatedFeedProvider {
             }
             .eraseToAnyPublisher()
     }
-
-    // Articleに変換
+    
+    // MARK: Articleに変換
+    
     private static func makeFeedItem(from article: DevArticle) -> Article {
         let now = Date()
         return Article(
@@ -145,7 +146,3 @@ enum DevToAPIService: PaginatedFeedProvider {
         )
     }
 }
-
-
-
-

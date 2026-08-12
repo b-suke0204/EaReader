@@ -8,8 +8,7 @@
 import Foundation
 
 enum KnownSiteFeedGuesser {
-    // MARK: - URL入力からの推測
-    
+    // URL入力からの推測する
     static func guess(forURL url: URL) -> [FeedCandidate] {
         guard let host = url.host?.lowercased() else { return [] }
         let pathComponents = url.pathComponents.filter { $0 != "/" }
@@ -28,7 +27,8 @@ enum KnownSiteFeedGuesser {
             if pathComponents.count >= 2, pathComponents[0] == "organizations" {
                 return [qiitaOrganizationCandidate(organization: pathComponents[1])].compactMap { $0 }
             }
-            if pathComponents.count >= 1, !["items", "drafts", "notifications", "settings"].contains(pathComponents[0]) {
+            let qiitaPathCandidates: [String] = ["items", "drafts", "notifications", "settings"]
+            if pathComponents.count >= 1, !qiitaPathCandidates.contains(pathComponents[0]) {
                 return [qiitaUserCandidate(user: pathComponents[0])].compactMap { $0 }
             }
         }
@@ -66,8 +66,7 @@ enum KnownSiteFeedGuesser {
         return []
     }
     
-    // MARK: - キーワード入力からの推測
-    
+    // キーワード入力からFeedURLを推測する
     static func guess(forKeyword rawKeyword: String) -> [FeedCandidate] {
         let keyword = rawKeyword.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !keyword.isEmpty else { return [] }
@@ -115,8 +114,7 @@ enum KnownSiteFeedGuesser {
         return candidates
     }
     
-    // MARK: - GitHub
-    
+    // GitHubからFeed候補を取得
     private static func githubRepositoryCandidates(owner: String, repo: String) -> [FeedCandidate] {
         let cleanRepo = repo.replacingOccurrences(of: ".git", with: "")
         let base = "https://github.com/\(owner)/\(cleanRepo)"
@@ -135,8 +133,7 @@ enum KnownSiteFeedGuesser {
         makeCandidate("https://github.com/\(user).atom", title: "GitHub: \(user) のアクティビティ", source: .github)
     }
     
-    // MARK: - Qiita
-    
+    // QiitaのFeed候補取得
     private static func qiitaTagCandidate(tag: String) -> FeedCandidate? {
         makeCandidate("https://qiita.com/tags/\(encodePathComponent(tag))/feed", title: "Qiita「\(tag)」タグの新着記事", source: .qiita)
     }
@@ -149,8 +146,7 @@ enum KnownSiteFeedGuesser {
         makeCandidate("https://qiita.com/organizations/\(encodePathComponent(organization))/feed", title: "Qiita Organization: \(organization)", source: .qiita)
     }
     
-    // MARK: - Zenn
-    
+    // ZennのFeed候補を取得
     private static func zennTopicCandidate(topic: String) -> FeedCandidate? {
         makeCandidate("https://zenn.dev/topics/\(encodePathComponent(topic))/feed", title: "Zenn「\(topic)」トピックの新着記事", source: .zenn)
     }
@@ -159,8 +155,7 @@ enum KnownSiteFeedGuesser {
         makeCandidate("https://zenn.dev/\(encodePathComponent(user))/feed", title: "Zenn: \(user) の投稿", source: .zenn)
     }
     
-    // MARK: - はてな
-    
+    // はてなのFeed候補取得
     private static func hatenaBlogCandidate(baseURL: URL) -> FeedCandidate? {
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else { return nil }
         components.path = "/feed"
@@ -182,14 +177,12 @@ enum KnownSiteFeedGuesser {
         )
     }
     
-    // MARK: - note
-    
+    // noteのFeed候補取得
     private static func noteUserCandidate(user: String) -> FeedCandidate? {
         makeCandidate("https://note.com/\(encodePathComponent(user))/rss", title: "note: \(user) の投稿", source: .note)
     }
     
-    // MARK: - Reddit
-    
+    // Redditの候補取得
     private static func redditSubredditCandidate(subreddit: String) -> FeedCandidate? {
         makeCandidate("https://www.reddit.com/r/\(encodePathComponent(subreddit))/.rss", title: "r/\(subreddit)", source: .reddit)
     }
@@ -198,8 +191,7 @@ enum KnownSiteFeedGuesser {
         makeCandidate("https://www.reddit.com/search.rss?q=\(encodeQueryComponent(keyword))", title: "Reddit検索「\(keyword)」", source: .reddit)
     }
     
-    // MARK: - DEV Community (dev.to)
-    
+    // DEV Community (dev.to)のFeed候補取得
     private static func devToTagCandidate(tag: String) -> FeedCandidate? {
         makeCandidate(
             "https://dev.to/feed/tag/\(encodePathComponent(tag.lowercased()))",
@@ -208,8 +200,7 @@ enum KnownSiteFeedGuesser {
         )
     }
     
-    // MARK: - WordPress.com
-    
+    // WordPress.comのFeed候補取得
     private static func wordPressTagCandidate(tag: String) -> FeedCandidate? {
         makeCandidate(
             "https://wordpress.com/tag/\(encodePathComponent(tag))/feed",
@@ -218,7 +209,7 @@ enum KnownSiteFeedGuesser {
         )
     }
     
-    // MARK: - Helpers
+    // ヘルパー処理群
     
     private static func makeCandidate(_ urlString: String, title: String, source: FeedSource) -> FeedCandidate? {
         guard let url = URL(string: urlString) else { return nil }

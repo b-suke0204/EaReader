@@ -39,5 +39,3 @@ struct UserFeed: UserFeedType {
         case deletedAt = "deleted_at"
     }
 }
-
-

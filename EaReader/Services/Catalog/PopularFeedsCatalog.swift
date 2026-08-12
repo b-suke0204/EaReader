@@ -384,4 +384,3 @@ enum PopularFeedsCatalog {
         return 0
     }
 }
-

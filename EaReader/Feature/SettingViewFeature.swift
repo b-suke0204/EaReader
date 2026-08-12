@@ -65,6 +65,3 @@ struct SettingViewFeature {
 }
 
 extension SettingViewFeature.Path.State: Equatable {}
-
-
-

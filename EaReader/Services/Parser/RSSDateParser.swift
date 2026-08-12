@@ -71,7 +71,7 @@ enum RSSDateParser {
     static func parse(_ rawValue: String) -> Date? {
         let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-
+        
         if let date = iso8601Fractional.date(from: trimmed) { return date }
         if let date = iso8601.date(from: trimmed) { return date }
         for formatter in fallbackFormatters {

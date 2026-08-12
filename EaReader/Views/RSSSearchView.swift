@@ -82,6 +82,3 @@ enum SearchKind: LocalizedStringKey, CapsuleSegmentType {
         }
     }
 }
-
-
-

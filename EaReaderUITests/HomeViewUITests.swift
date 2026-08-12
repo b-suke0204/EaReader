@@ -44,6 +44,3 @@ final class HomeViewUITests: XCTestCase {
         XCTAssertTrue(searchButton.waitForExistence(timeout: 3))
     }
 }
-
-
-

@@ -98,6 +98,3 @@ struct PlaceholderIcon: View {
             }
     }
 }
-
-
-

@@ -77,6 +77,3 @@ struct ParsedFeed {
     var description: String?
     var items: [Article] = []
 }
-
-
-

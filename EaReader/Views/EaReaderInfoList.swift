@@ -95,6 +95,3 @@ struct DeleteCacheButton: View {
         .padding(.top, 1)
     }
 }
-
-
-

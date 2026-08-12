@@ -56,6 +56,3 @@ struct ArticleSummary: View {
         }
     }
 }
-
-
-

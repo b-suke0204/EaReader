@@ -23,7 +23,10 @@ enum FeedFetcher {
         var request = URLRequest(url: url)
         request.timeoutInterval = timeout
         request.setValue(feedUserAgent, forHTTPHeaderField: "User-Agent")
-        request.setValue("application/rss+xml, application/atom+xml, application/xml, text/xml, */*", forHTTPHeaderField: "Accept")
+        request.setValue(
+            "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+            forHTTPHeaderField: "Accept"
+        )
         
         return URLSession.shared.dataTaskPublisher(for: request)
             .tryMap { data, response -> Data in
@@ -60,10 +63,11 @@ enum FeedFetcher {
             }
             .eraseToAnyPublisher()
     }
-
+    
     static func looksLikeFeed(data: Data) -> Bool {
         let prefixData = data.prefix(4096)
-        guard let prefix = String(data: prefixData, encoding: .utf8) ?? String(data: prefixData, encoding: .isoLatin1) else {
+        let prefixStr = String(data: prefixData, encoding: .utf8) ?? String(data: prefixData, encoding: .isoLatin1)
+        guard let prefix = prefixStr else {
             return false
         }
         let lower = prefix.lowercased()
@@ -77,6 +81,3 @@ enum FeedFetcher {
         return true
     }
 }
-
-
-

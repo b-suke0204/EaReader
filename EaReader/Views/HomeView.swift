@@ -159,7 +159,3 @@ struct NewBadge: View {
         IconView(number: number, iconName: "New!!", iconColor: Color.noRead, isTextIcon: true)
     }
 }
-
-
-
-

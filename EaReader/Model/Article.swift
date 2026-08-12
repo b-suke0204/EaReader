@@ -62,5 +62,3 @@ struct Article: ArticleType {
         case updatedAt = "updated_at"
     }
 }
-
-

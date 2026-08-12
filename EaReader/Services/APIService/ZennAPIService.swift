@@ -9,12 +9,12 @@ import Foundation
 import Combine
 
 enum ZennAPIService: PaginatedFeedProvider {
-    // MARK: - API Response Models
-    
+    // API応答用のModels
     private struct ArticlesResponse: Decodable {
         let articles: [ZennArticle]
     }
     
+    // Zenn用の記事モデル
     private struct ZennArticle: Decodable {
         let title: String
         let path: String
@@ -37,18 +37,15 @@ enum ZennAPIService: PaginatedFeedProvider {
         }
     }
     
-    // MARK: - Feed URL
+    // Feed用URL作成
     
     // `https://zenn.dev/topics/{topic}/feed` からトピック名を取り出す
     static func topicName(fromFeedURL url: URL) -> String? {
-        guard let host = url.host,
-              host.contains("zenn.dev") else {
+        guard let host = url.host, host.contains("zenn.dev") else {
             return nil
         }
         
-        let components = url.pathComponents.filter {
-            $0 != "/"
-        }
+        let components = url.pathComponents.filter { $0 != "/" }
         guard components.count >= 3,
               components[0] == "topics",
               components.last == "feed" else {
@@ -60,8 +57,7 @@ enum ZennAPIService: PaginatedFeedProvider {
     
     // `https://zenn.dev/{user}/feed` からユーザー名を取り出す
     static func userName(fromFeedURL url: URL) -> String? {
-        guard let host = url.host,
-              host.contains("zenn.dev") else {
+        guard let host = url.host, host.contains("zenn.dev") else {
             return nil
         }
         
@@ -75,8 +71,8 @@ enum ZennAPIService: PaginatedFeedProvider {
         
         return components[0].removingPercentEncoding ?? components[0]
     }
-
-    // MARK: - PaginatedFeedProvider
+    
+    // PaginatedFeedProviderの処理 ここから
     
     static func canHandle(feedURL: URL) -> Bool {
         topicName(fromFeedURL: feedURL) != nil || userName(fromFeedURL: feedURL) != nil
@@ -111,11 +107,12 @@ enum ZennAPIService: PaginatedFeedProvider {
         return Just([]).eraseToAnyPublisher()
     }
     
-    // MARK: - API
+    // PaginatedFeedProviderの処理 ここまで
+    
+    // APIアクセス処理
     
     private static func fetchPages(queryName: String, queryValue: String, maxPages: Int = 2) -> AnyPublisher<[Article], Never> {
-        let pagePublishers: [AnyPublisher<[ZennArticle], Never>] =
-            (1...maxPages).map { page in
+        let pagePublishers: [AnyPublisher<[ZennArticle], Never>] = (1...maxPages).map { page in
                 fetchPage(
                     queryName: queryName,
                     queryValue: queryValue,
@@ -168,7 +165,7 @@ enum ZennAPIService: PaginatedFeedProvider {
         .eraseToAnyPublisher()
     }
     
-    // MARK: - Article Conversion
+    // MARK: Articleに変換
     
     @MainActor
     private static func makeArticle(from article: ZennArticle) -> Article {
@@ -191,6 +188,3 @@ enum ZennAPIService: PaginatedFeedProvider {
         )
     }
 }
-
-
-

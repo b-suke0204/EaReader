@@ -174,4 +174,3 @@ struct CustomEmptyView: View {
             .frame(width: size.width, height: size.height)
     }
 }
-

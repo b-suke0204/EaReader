@@ -9,8 +9,7 @@ import Foundation
 import Combine
 
 enum QiitaAPIService: PaginatedFeedProvider {
-    // MARK: - API Response Model
-    
+    // API応答用のModel
     private struct QiitaItem: Decodable {
         let id: String
         let title: String
@@ -32,7 +31,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
         }
     }
     
-    // MARK: - Feed URL
+    // Feed URLを作成
     
     // フィードURLが `qiita.com/tags/{tag}/feed` 形式ならタグ名を返す。
     static func tagName(fromFeedURL url: URL) -> String? {
@@ -40,9 +39,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
             return nil
         }
         
-        let components = url.pathComponents.filter {
-            $0 != "/"
-        }
+        let components = url.pathComponents.filter { $0 != "/" }
         guard components.count >= 3,
               components[0] == "tags",
               components.last == "feed" else {
@@ -75,7 +72,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
             ?? components[0]
     }
     
-    // MARK: - PaginatedFeedProvider
+    // PaginatedFeedProviderの処理 ここから
     
     static func canHandle(feedURL: URL) -> Bool {
         tagName(fromFeedURL: feedURL) != nil || userName(fromFeedURL: feedURL) != nil
@@ -91,7 +88,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
         
         return Just([]).eraseToAnyPublisher()
     }
-
+    
     static func fallbackTitle(feedURL: URL) -> String {
         if let tag = tagName(fromFeedURL: feedURL) {
             return "Qiita「\(tag)」タグの新着記事"
@@ -102,7 +99,9 @@ enum QiitaAPIService: PaginatedFeedProvider {
         return "Qiita"
     }
     
-    // MARK: - API
+    // PaginatedFeedProviderの処理 ここまで
+    
+    // APIアクセス
     
     static func fetchTagItems(tag: String, maxPages: Int = 3, perPage: Int = 20) -> AnyPublisher<[Article], Never> {
         fetchPages(
@@ -111,7 +110,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
             perPage: perPage
         )
     }
-
+    
     static func fetchUserItems(user: String, maxPages: Int = 3, perPage: Int = 20) -> AnyPublisher<[Article], Never> {
         fetchPages(
             endpoint: "https://qiita.com/api/v2/users/\(encodePathComponent(user))/items",
@@ -119,7 +118,7 @@ enum QiitaAPIService: PaginatedFeedProvider {
             perPage: perPage
         )
     }
-
+    
     private static func fetchPages(endpoint: String, maxPages: Int, perPage: Int) -> AnyPublisher<[Article], Never> {
         let pagePublishers: [AnyPublisher<[QiitaItem], Never>] =
             (1...maxPages).map { page in
@@ -146,14 +145,8 @@ enum QiitaAPIService: PaginatedFeedProvider {
         }
         
         components.queryItems = [
-            URLQueryItem(
-                name: "page",
-                value: String(page)
-            ),
-            URLQueryItem(
-                name: "per_page",
-                value: String(perPage)
-            )
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "per_page", value: String(perPage))
         ]
         
         guard let url = components.url else {
@@ -178,15 +171,13 @@ enum QiitaAPIService: PaginatedFeedProvider {
         .eraseToAnyPublisher()
     }
     
-    // MARK: - Article Conversion
+    // MARK: Articleに変換
     
     @MainActor
     private static func makeArticle(from qiitaItem: QiitaItem) -> Article {
         let now = Date()
         let summary = qiitaItem.body.map {
-            TextSanitizer.cleanSummary(
-                String($0.prefix(500))
-            )
+            TextSanitizer.cleanSummary(String($0.prefix(500)))
         }
         
         return Article(
@@ -211,6 +202,3 @@ enum QiitaAPIService: PaginatedFeedProvider {
         value.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? value
     }
 }
-
-
-

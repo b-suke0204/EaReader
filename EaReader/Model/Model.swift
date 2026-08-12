@@ -27,7 +27,3 @@ struct ArticleModel<A: ArticleType>: Equatable, Identifiable {
     var id: UUID = UUID()
     var article: A
 }
-
-
-
-

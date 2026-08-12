@@ -14,6 +14,3 @@ extension Int {
         return self == 0
     }
 }
-
-
-

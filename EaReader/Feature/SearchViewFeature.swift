@@ -128,7 +128,6 @@ struct SearchViewFeature {
         .ifLet(\.$alertRegistration, action: \.registerAlert)
     }
     
-    
     private let searchCancellationID = "SearchViewFeature.search"
     
     private func searchFeed(_ state: inout State) -> Effect<Action> {
@@ -156,4 +155,3 @@ struct SearchViewFeature {
         .cancellable(id: self.searchCancellationID, cancelInFlight: true)
     }
 }
-

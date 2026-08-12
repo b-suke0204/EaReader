@@ -66,8 +66,3 @@ struct AddArticleButton: View {
         }
     }
 }
-
-
-
-
-

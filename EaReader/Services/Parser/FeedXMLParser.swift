@@ -75,11 +75,11 @@ final class FeedXMLParser: NSObject, XMLParserDelegate {
         }
     }
 
-    /// <media:thumbnail url="...">、<media:content medium="image" url="...">、
-    /// <enclosure url="..." type="image/*"> からサムネイル画像URLを検出する。
-    /// 名前空間プレフィックスは無視しているため、media:content はAtomの
-    /// プレーンな<content>(本文テキスト)と同じローカル名"content"になるが、
-    /// こちらは url 属性を持つ自己終了タグである点で区別できる。
+    // <media:thumbnail url="...">、<media:content medium="image" url="...">、
+    // <enclosure url="..." type="image/*"> からサムネイル画像URLを検出する。
+    // 名前空間プレフィックスは無視しているため、media:content はAtomの
+    // プレーンな<content>(本文テキスト)と同じローカル名"content"になるが、
+    // こちらは url 属性を持つ自己終了タグである点で区別できる。
     private func captureThumbnailIfPresent(elementName name: String, attributes: [String: String]) {
         switch name {
         case "thumbnail":
@@ -198,6 +198,3 @@ final class FeedXMLParser: NSObject, XMLParserDelegate {
         }
     }
 }
-
-
-

@@ -13,5 +13,3 @@ struct ContentView: View {
         HomeView()
     }
 }
-
-

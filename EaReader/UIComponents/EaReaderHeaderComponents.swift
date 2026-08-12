@@ -75,5 +75,3 @@ struct SettingButton: View {
         }
     }
 }
-
-

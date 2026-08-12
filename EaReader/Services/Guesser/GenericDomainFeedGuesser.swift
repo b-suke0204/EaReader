@@ -66,7 +66,15 @@ enum GenericDomainFeedGuesser {
                 }
                 let directPathCandidates = commonFeedPaths.compactMap { path -> FeedCandidate? in
                     guard let url = URL(string: "https://\(host)\(path)") else { return nil }
-                    return FeedCandidate(feedURL: url, title: host, siteURL: nil, summary: nil, iconURL: nil, source: .domainGuess)
+                    let candidate = FeedCandidate(
+                        feedURL: url,
+                        title: host,
+                        siteURL: nil,
+                        summary: nil,
+                        iconURL: nil,
+                        source: .domainGuess
+                    )
+                    return candidate
                 }
                 return FeedSearchOrchestrator.validate(directPathCandidates, timeout: exploreTimeout)
             }

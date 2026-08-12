@@ -61,4 +61,3 @@ struct ArticleListLengthMenu: View {
         .navigationTitle("記事数設定")
     }
 }
-

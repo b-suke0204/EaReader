@@ -10,13 +10,18 @@ import Foundation
 // 文字列を有効なものに変換する処理
 enum TextSanitizer {
     private static let namedEntities: [String: String] = [
-        "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": "\"",
-        "&#39;": "'", "&apos;": "'", "&nbsp;": " "
+        "&amp;": "&",
+        "&lt;": "<",
+        "&gt;": ">",
+        "&quot;": "\"",
+        "&#39;": "'", 
+        "&apos;": "'",
+        "&nbsp;": " "
     ]
-
+    
     private static let numericEntityRegex = try? NSRegularExpression(pattern: "&#(x?[0-9A-Fa-f]+);")
     private static let tagRegex = try? NSRegularExpression(pattern: "<[^>]+>")
-
+    
     static func decodeHTMLEntities(_ input: String) -> String {
         var result = input
         for (entity, replacement) in namedEntities {
@@ -41,24 +46,20 @@ enum TextSanitizer {
         }
         return result
     }
-
+    
     static func stripHTMLTags(_ input: String) -> String {
         guard let regex = tagRegex else { return input }
         let ns = input as NSString
-        let stripped = regex.stringByReplacingMatches(in: input, range: NSRange(location: 0, length: ns.length), withTemplate: "")
+        let range = NSRange(location: 0, length: ns.length)
+        let stripped = regex.stringByReplacingMatches(in: input, range: range, withTemplate: "")
         return stripped.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
+    
     static func cleanSummary(_ input: String) -> String {
         stripHTMLTags(decodeHTMLEntities(input))
     }
-
+    
     static func cleanTitle(_ input: String) -> String {
         decodeHTMLEntities(input).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
-
-
-
-
-

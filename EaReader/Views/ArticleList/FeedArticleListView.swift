@@ -205,7 +205,3 @@ struct ArticleThumbnailPlaceholder: View {
             }
     }
 }
-
-
-
-

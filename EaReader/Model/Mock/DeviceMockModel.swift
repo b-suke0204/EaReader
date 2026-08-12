@@ -57,7 +57,9 @@ struct DeviceMockModel {
     }
     
     // 26.08.04 B DeviceModel取得
-    private func getDeviceModel<U: UserFeedType, A: ArticleType>(feeds: [UserFeedModel<U, A>]) -> DeviceModel<Device, U, A> {
+    private func getDeviceModel<U: UserFeedType, A: ArticleType>(
+        feeds: [UserFeedModel<U, A>]
+    ) -> DeviceModel<Device, U, A> {
         let device: Device = Device(
             id: 1,
             deviceId: "1",
@@ -89,53 +91,60 @@ struct DeviceMockModel {
         articles: [DeviceMockModel.article1, DeviceMockModel.article2, DeviceMockModel.article3]
     )
     
-    static private var article1 = ArticleModel(article: Article(
-        id: UUID(),
-        feedId: 1,
-        articleTitle: "わかるようでわからないssh接続について",
-        articleLink: URL(string: "https://qiita.com/hrfm1623/items/91115760e4bd66f7995a")!,
-        guid: "https://qiita.com/hrfm1623/items/91115760e4bd66f7995a",
-        isRead: false,
-        isFavorite: true,
-        isHidden: false,
-        publishedAt: Date(),
-        contentUpdatedAt: Date(),
-        fetchedAt: Date(),
-        createdAt: Date(),
-        updatedAt: Date()
-    ))
+    static private var article1 = ArticleModel(article:
+        Article(
+            id: UUID(),
+            feedId: 1,
+            articleTitle: "わかるようでわからないssh接続について",
+            articleLink: URL(string: "https://qiita.com/hrfm1623/items/91115760e4bd66f7995a")!,
+            guid: "https://qiita.com/hrfm1623/items/91115760e4bd66f7995a",
+            isRead: false,
+            isFavorite: true,
+            isHidden: false,
+            publishedAt: Date(),
+            contentUpdatedAt: Date(),
+            fetchedAt: Date(),
+            createdAt: Date(),
+            updatedAt: Date()
+        )
+    )
     
-    static private var article2 = ArticleModel(article: Article(
-        id: UUID(),
-        feedId: 1,
-        articleTitle: "OS？カーネル開発？聞いたことありませんねその単語🤔【ITパスポート】",
-        articleLink: URL(string: "https://qiita.com/prumnn/items/4da8a4aa027730db23e0")!,
-        guid: "https://qiita.com/prumnn/items/4da8a4aa027730db23e0",
-        isRead: true,
-        isFavorite: true,
-        isHidden: false,
-        publishedAt: Date(),
-        contentUpdatedAt: Date(),
-        fetchedAt: Date(),
-        createdAt: Date(),
-        updatedAt: Date()
-    ))
+    static private var article2 = ArticleModel(article:
+        Article(
+            id: UUID(),
+            feedId: 1,
+            articleTitle: "OS？カーネル開発？聞いたことありませんねその単語🤔【ITパスポート】",
+            articleLink: URL(string: "https://qiita.com/prumnn/items/4da8a4aa027730db23e0")!,
+            guid: "https://qiita.com/prumnn/items/4da8a4aa027730db23e0",
+            isRead: true,
+            isFavorite: true,
+            isHidden: false,
+            publishedAt: Date(),
+            contentUpdatedAt: Date(),
+            fetchedAt: Date(),
+            createdAt: Date(),
+            updatedAt: Date()
+        ))
     
-    static private var article3 = ArticleModel(article: Article(
-        id: UUID(),
-        feedId: 1,
-        articleTitle: "ずぼらAI駆動開発、爆誕",
-        articleLink: URL(string: "https://qiita.com/nobu34/items/224f55bc85b813930f61")!,
-        guid: "https://qiita.com/nobu34/items/224f55bc85b813930f61",
-        isRead: false,
-        isFavorite: false,
-        isHidden: true,
-        publishedAt: Date(),
-        contentUpdatedAt: Date(),
-        fetchedAt: Date(),
-        createdAt: Date(),
-        updatedAt: Date()
-    ))
+    static private var article3 = ArticleModel(article:
+        Article(
+            id: UUID(),
+            feedId: 1,
+            articleTitle: "ずぼらAI駆動開発、爆誕",
+            articleLink: URL(
+                string: "https://qiita.com/nobu34/items/224f55bc85b813930f61"
+            )!,
+            guid: "https://qiita.com/nobu34/items/224f55bc85b813930f61",
+            isRead: false,
+            isFavorite: false,
+            isHidden: true,
+            publishedAt: Date(),
+            contentUpdatedAt: Date(),
+            fetchedAt: Date(),
+            createdAt: Date(),
+            updatedAt: Date()
+        )
+    )
     
     static private var userFeed1: UserFeed = UserFeed(
         id: 1,
@@ -170,5 +179,3 @@ struct DeviceMockModel {
         deletedAt: Date()
     )
 }
-
-

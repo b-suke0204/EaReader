@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 enum GitHubAPIService: PaginatedFeedProvider {
-    // MARK: - API Response Models
+    // API応答用のモデル (Release)
     private struct Release: Decodable {
         let id: Int
         let name: String?
@@ -33,6 +33,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
         }
     }
     
+    // API応答用のモデル (Commit)
     private struct Commit: Decodable {
         let sha: String
         let htmlURL: URL
@@ -59,6 +60,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
         let date: String
     }
     
+    // API応答用のモデル (UserEvent)
     private struct UserEvent: Decodable {
         let id: String
         let type: String
@@ -83,7 +85,6 @@ enum GitHubAPIService: PaginatedFeedProvider {
     }
     
     // Github Feed種別
-    
     private enum Kind {
         case releases(owner: String, repo: String)
         case commits(owner: String, repo: String)
@@ -124,7 +125,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
         return nil
     }
     
-    // MARK: - PaginatedFeedProvider
+    // PaginatedFeedProviderの処理 ここから
     
     static func canHandle(feedURL: URL) -> Bool {
         kind(fromFeedURL: feedURL) != nil
@@ -164,7 +165,9 @@ enum GitHubAPIService: PaginatedFeedProvider {
         }
     }
     
-    // MARK: - API Request
+    // PaginatedFeedProviderの処理 ここまで
+    
+    // API Requestを送信
     
     private static func fetchPaged<T: Decodable>(
         path: String,
@@ -218,7 +221,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
             .eraseToAnyPublisher()
     }
     
-    // Articleに変換
+    // MARK: Articleに変換
     
     // ReleaseからArticle作成
     @MainActor
@@ -306,8 +309,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
         )
     }
     
-    // MARK: - Event Title
-    
+    // GithubのEventタイトルを取得
     private static func eventTitle(type: String, repo: String) -> String {
         switch type {
         case "PushEvent":
@@ -338,6 +340,3 @@ enum GitHubAPIService: PaginatedFeedProvider {
         }
     }
 }
-
-
-

@@ -33,15 +33,15 @@ struct ArticleListFeature {
         @Presents var destination: Destination.State?
         
         var targetFeed: UserFeedModel<UserFeed, Article>?
-        var targetURL: URL? = nil
+        var targetURL: URL?
         
         var browserMode: BrowserMode = .all
         
         // 読み込み時に使用
         var isLoading: Bool = false
         var isAccumulatingHistory: Bool = false  // UI側で履歴があったという表示をするために使用
-        var feedDescription: String? = nil
-        var errorMessage: String? = nil
+        var feedDescription: String?
+        var errorMessage: String?
         
         var emptyText: String {
             switch browserMode {
@@ -196,7 +196,3 @@ struct ArticleListFeature {
 }
 
 extension ArticleListFeature.Destination.State: Equatable {}
-
-
-
-
