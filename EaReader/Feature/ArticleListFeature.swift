@@ -24,6 +24,7 @@ enum ArticleListState {
     case articles
 }
 
+// 記事一覧Feature作成
 @Reducer
 struct ArticleListFeature {
     
