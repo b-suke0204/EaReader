@@ -1,0 +1,21 @@
+name: EaReaderLint
+
+on: 
+  push:
+    branches:
+      - '**'
+
+jobs:
+  swiftlint:
+    runs-on: macos-latest
+
+    steps:
+      - name: CheckOutLint
+        uses: actions/checkout@v4
+
+      - name: Install swiftlint
+        run: brew install swiftlint
+
+      # 危険なコードをなくすため、SwiftLintの黄色いエラーを無視しないようにする
+      - name: Run swiftlint
+        run: swiftlint lint --strict

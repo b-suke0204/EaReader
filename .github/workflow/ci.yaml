@@ -1,0 +1,27 @@
+name: EaReader CI
+
+on:
+  pull_request:
+  workflow-dispatch:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: CheckOut
+        uses: actions/checkout@v4
+
+      - name: Test
+        run: |
+          set -o pipefail
+
+          xcodebuild \
+            -project EaReader.xcodeproj \
+            -scheme EaReader
+            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.0' \
+            -only-testing: EaReaderTests \
+            -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO \
+            test

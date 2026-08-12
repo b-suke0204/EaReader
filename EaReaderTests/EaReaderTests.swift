@@ -7,6 +7,7 @@
 
 import Testing
 @testable import EaReader
+import ComposableArchitecture
 
 struct EaReaderTests {
 

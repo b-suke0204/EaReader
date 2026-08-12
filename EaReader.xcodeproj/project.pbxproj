@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D61C53DA3024E406002FE6C2 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D61C53D93024E406002FE6C2 /* ComposableArchitecture */; };
+		D61C53DC3024E41D002FE6C2 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = D61C53DB3024E41D002FE6C2 /* ComposableArchitecture */; };
+		D61C53EA3026CEB6002FE6C2 /* SegmentKit in Frameworks */ = {isa = PBXBuildFile; productRef = D61C53E93026CEB6002FE6C2 /* SegmentKit */; };
+		D61C53EC3026CECD002FE6C2 /* SegmentKit in Frameworks */ = {isa = PBXBuildFile; productRef = D61C53EB3026CECD002FE6C2 /* SegmentKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D6A089FB301F6945009D6427 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,14 +31,106 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D61C53E83026CEAF002FE6C2 /* SegmentKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SegmentKit; sourceTree = "<group>"; };
 		D6A089ED301F6944009D6427 /* EaReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EaReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6A089FA301F6945009D6427 /* EaReaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EaReaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6A08A04301F6945009D6427 /* EaReaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EaReaderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D61C55AA3028E059002FE6C2 /* Exceptions for "EaReader" folder in "EaReader" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D6A089EC301F6944009D6427 /* EaReader */;
+		};
+		D6A08C0A3022228A009D6427 /* Exceptions for "EaReader" folder in "EaReaderTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				Extension/ColorExtension.swift,
+				Extension/IntExtension.swift,
+				Extension/URLExtension.swift,
+				Feature/ArticleListFeature.swift,
+				Feature/ArticleThumnailFeature.swift,
+				Feature/HomeViewFeature.swift,
+				Feature/SearchViewFeature.swift,
+				Feature/SettingViewFeature.swift,
+				Model/Article.swift,
+				Model/Device.swift,
+				Model/FeedCandidate.swift,
+				Model/Mock/DeviceMockModel.swift,
+				Model/Mock/FeedCandidateMockModel.swift,
+				Model/Model.swift,
+				Model/UserFeed.swift,
+				State/AppState.swift,
+				UIComponents/EaReaderHeaderComponents.swift,
+				UIComponents/NoFeedComponents.swift,
+				UIComponents/UIComponents.swift,
+				Utility/DateUtility.swift,
+				ViewModel/FeedListViewModel.swift,
+				Views/ArticleList/ArticleListLeftItem.swift,
+				Views/ArticleList/ArticleListRightItem.swift,
+				Views/ArticleList/FeedArticleListView.swift,
+				Views/EaReaderInfoList.swift,
+				Views/EaReaderSettingList.swift,
+				Views/FeedCandidateList.swift,
+				Views/HomeView.swift,
+				Views/RSSSearchView.swift,
+				Views/SafariWebView.swift,
+				Views/SettingView.swift,
+			);
+			target = D6A089F9301F6945009D6427 /* EaReaderTests */;
+		};
+		D6A08C0B3022228A009D6427 /* Exceptions for "EaReader" folder in "EaReaderUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				Extension/ColorExtension.swift,
+				Extension/IntExtension.swift,
+				Extension/URLExtension.swift,
+				Feature/ArticleListFeature.swift,
+				Feature/ArticleThumnailFeature.swift,
+				Feature/HomeViewFeature.swift,
+				Feature/SearchViewFeature.swift,
+				Feature/SettingViewFeature.swift,
+				Model/Article.swift,
+				Model/Device.swift,
+				Model/FeedCandidate.swift,
+				Model/Mock/DeviceMockModel.swift,
+				Model/Mock/FeedCandidateMockModel.swift,
+				Model/Model.swift,
+				Model/UserFeed.swift,
+				State/AppState.swift,
+				UIComponents/EaReaderHeaderComponents.swift,
+				UIComponents/NoFeedComponents.swift,
+				UIComponents/UIComponents.swift,
+				Utility/DateUtility.swift,
+				ViewModel/FeedListViewModel.swift,
+				Views/ArticleList/ArticleListLeftItem.swift,
+				Views/ArticleList/ArticleListRightItem.swift,
+				Views/ArticleList/FeedArticleListView.swift,
+				Views/EaReaderInfoList.swift,
+				Views/EaReaderSettingList.swift,
+				Views/FeedCandidateList.swift,
+				Views/HomeView.swift,
+				Views/RSSSearchView.swift,
+				Views/SafariWebView.swift,
+				Views/SettingView.swift,
+			);
+			target = D6A08A03301F6945009D6427 /* EaReaderUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D6A089EF301F6944009D6427 /* EaReader */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D61C55AA3028E059002FE6C2 /* Exceptions for "EaReader" folder in "EaReader" target */,
+				D6A08C0A3022228A009D6427 /* Exceptions for "EaReader" folder in "EaReaderTests" target */,
+				D6A08C0B3022228A009D6427 /* Exceptions for "EaReader" folder in "EaReaderUITests" target */,
+			);
 			path = EaReader;
 			sourceTree = "<group>";
 		};
@@ -52,6 +151,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61C53DC3024E41D002FE6C2 /* ComposableArchitecture in Frameworks */,
+				D61C53EC3026CECD002FE6C2 /* SegmentKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +167,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61C53DA3024E406002FE6C2 /* ComposableArchitecture in Frameworks */,
+				D61C53EA3026CEB6002FE6C2 /* SegmentKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +181,7 @@
 				D6A089EF301F6944009D6427 /* EaReader */,
 				D6A089FD301F6945009D6427 /* EaReaderTests */,
 				D6A08A07301F6945009D6427 /* EaReaderUITests */,
+				D6A08C12302222CE009D6427 /* Frameworks */,
 				D6A089EE301F6944009D6427 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +196,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D6A08C12302222CE009D6427 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D61C53E83026CEAF002FE6C2 /* SegmentKit */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +214,7 @@
 				D6A089E9301F6944009D6427 /* Sources */,
 				D6A089EA301F6944009D6427 /* Frameworks */,
 				D6A089EB301F6944009D6427 /* Resources */,
+				D61C55C9302C3FDB002FE6C2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -112,6 +225,8 @@
 			);
 			name = EaReader;
 			packageProductDependencies = (
+				D61C53DB3024E41D002FE6C2 /* ComposableArchitecture */,
+				D61C53EB3026CECD002FE6C2 /* SegmentKit */,
 			);
 			productName = EaReader;
 			productReference = D6A089ED301F6944009D6427 /* EaReader.app */;
@@ -158,6 +273,8 @@
 			);
 			name = EaReaderUITests;
 			packageProductDependencies = (
+				D61C53D93024E406002FE6C2 /* ComposableArchitecture */,
+				D61C53E93026CEB6002FE6C2 /* SegmentKit */,
 			);
 			productName = EaReaderUITests;
 			productReference = D6A08A04301F6945009D6427 /* EaReaderUITests.xctest */;
@@ -195,6 +312,9 @@
 			);
 			mainGroup = D6A089E4301F6944009D6427;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D61C53D23024E3E3002FE6C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D6A089EE301F6944009D6427 /* Products */;
 			projectDirPath = "";
@@ -230,6 +350,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D61C55C9302C3FDB002FE6C2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nexport PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\nif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint lint --config \"${SRCROOT}/.swiftlint.yaml\"\nelse\n    echo \"warning: SwiftLint not installed. Install it with 'brew install swiftlint'\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D6A089E9301F6944009D6427 /* Sources */ = {
@@ -399,12 +540,15 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EaReader/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -431,12 +575,15 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EaReader/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -462,7 +609,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nekoengineer.EaReaderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,7 +631,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nekoengineer.EaReaderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -505,6 +652,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nekoengineer.EaReaderUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -525,6 +673,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = NBK7LMNAXU;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nekoengineer.EaReaderUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -578,6 +727,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D61C53D23024E3E3002FE6C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.26.1;
+			};
+			traits = (
+			);
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D61C53D93024E406002FE6C2 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D61C53D23024E3E3002FE6C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		D61C53DB3024E41D002FE6C2 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D61C53D23024E3E3002FE6C2 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		D61C53E93026CEB6002FE6C2 /* SegmentKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SegmentKit;
+		};
+		D61C53EB3026CECD002FE6C2 /* SegmentKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SegmentKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D6A089E5301F6944009D6427 /* Project object */;
 }
