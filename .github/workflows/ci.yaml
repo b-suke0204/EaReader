@@ -20,7 +20,7 @@ jobs:
           xcodebuild \
             -project EaReader.xcodeproj \
             -scheme EaReader \
-            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.0' \
+            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
             -only-testing:EaReaderTests \
             -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO \
