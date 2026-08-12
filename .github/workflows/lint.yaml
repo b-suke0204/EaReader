@@ -15,10 +15,13 @@ jobs:
 
       - name: Install swiftlint
         run: brew install swiftlint
-
+        
+      # ローカルとGithub上のswiftlintバージョンが異なる可能性があるため、念の為追加
       - name: Check SwiftLint Version
         run: swiftlint version
 
+      # 26.08.12 B configで見るswiftlint.yamlを設定
+      # そうしないと見るswiftlintファイルの問題を解決できなくなり、コードを修正してもエラーが出た汗
       # 危険なコードをなくすため、SwiftLintの黄色いエラーを無視しないようにする
       - name: Run swiftlint
         run: swiftlint lint --strict --config .swiftlint.yaml
