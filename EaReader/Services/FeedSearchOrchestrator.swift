@@ -16,7 +16,10 @@ enum FeedSearchOrchestrator {
     // パース結果のタイトル・説明で更新して返す。
     // 検証は並行に走るため、結果は元の candidates の順序に並べ直して返す
     // (カタログ検索のスコア順などを崩さないため)。
-    static func validate(_ candidates: [FeedCandidate], timeout: TimeInterval = 12) -> AnyPublisher<[FeedCandidate], Never> {
+    static func validate(
+        _ candidates: [FeedCandidate],
+        timeout: TimeInterval = 12
+    ) -> AnyPublisher<[FeedCandidate], Never> {
         var seen = Set<String>()
         let uniqueCandidates = candidates.filter { seen.insert($0.feedURL.absoluteString).inserted }
         
@@ -47,7 +50,9 @@ enum FeedSearchOrchestrator {
                 results
                     .compactMap { $0 }
                     .sorted {
-                        (originalOrder[$0.feedURL.absoluteString] ?? 0) < (originalOrder[$1.feedURL.absoluteString] ?? 0)
+                        let lhsURL = originalOrder[$0.feedURL.absoluteString] ?? 0
+                        let rhsURL = originalOrder[$1.feedURL.absoluteString] ?? 0
+                        return lhsURL < rhsURL
                     }
             }
             .eraseToAnyPublisher()
@@ -119,7 +124,8 @@ enum FeedSearchOrchestrator {
             .map { catalog, guessed, domainResults -> [FeedCandidate] in
                 var seen = Set<String>()
                 var merged: [FeedCandidate] = []
-                for candidate in catalog + guessed + domainResults where seen.insert(candidate.feedURL.absoluteString).inserted {
+                let candidates = catalog + guessed + domainResults
+                for candidate in candidates where seen.insert(candidate.feedURL.absoluteString).inserted {
                     print("どのURLだ？: \(candidate.feedURL)")
                     merged.append(candidate)
                 }

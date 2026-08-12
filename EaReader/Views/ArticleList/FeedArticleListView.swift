@@ -76,8 +76,10 @@ struct FeedArticleList: View {
             item: $articleListFeature.scope(
                 state: \.$destination.safariViewFeature, action: \.destination.safariViewFeature
             )
-        ) { store in
-            SafariWebView(url: articleListFeature.targetURL!)
+        ) { _ in
+            if let targetURL = articleListFeature.targetURL {
+                SafariWebView(url: targetURL)
+            }
         }
         .task {
             // 記事をFeedから読み込む
@@ -118,7 +120,7 @@ struct FeedArticleList: View {
     }
     
     var feedTitle: String {
-        return homeStore.targetUserFeed?.userFeed.feedTitle ?? ""
+        homeStore.targetUserFeed?.userFeed.feedTitle ?? ""
     }
 }
 

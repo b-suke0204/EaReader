@@ -12,6 +12,44 @@ enum KnownSiteFeedGuesser {
     static func guess(forURL url: URL) -> [FeedCandidate] {
         guard let host = url.host?.lowercased() else { return [] }
         let pathComponents = url.pathComponents.filter { $0 != "/" }
+        
+        // nilだったら、次のFeedを検索
+        if let githubFeed = getGithubFeeds(host: host, pathComponents: pathComponents) {
+            return githubFeed
+        }
+        
+        if let qiitaFeed = getQiitaFeeds(host: host, pathComponents: pathComponents) {
+            return qiitaFeed
+        }
+        
+        if let zennFeed = getZennFeeds(host: host, pathComponents: pathComponents) {
+            return zennFeed
+        }
+        
+        if let hatenaFeed = getHatenaFeed(host: host, pathComponents: pathComponents, baseURL: url) {
+            return hatenaFeed
+        }
+        
+        if let noteFeed = getNoteFeeds(host: host, pathComponents: pathComponents) {
+            return noteFeed
+        }
+        
+        if let redditFeed = getRedditFeeds(host: host, pathComponents: pathComponents) {
+            return redditFeed
+        }
+        
+        if let devToFeed = getDevToFeeds(host: host, pathComponents: pathComponents) {
+            return devToFeed
+        }
+        
+        if let wordpressFeed = getWordpressFeeds(host: host, pathComponents: pathComponents) {
+            return wordpressFeed
+        }
+        
+        return []
+    }
+    
+    private static func getGithubFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("github.com") {
             if pathComponents.count >= 2 {
                 return githubRepositoryCandidates(owner: pathComponents[0], repo: pathComponents[1])
@@ -19,7 +57,10 @@ enum KnownSiteFeedGuesser {
                 return githubUserCandidates(user: pathComponents[0])
             }
         }
-        
+        return nil
+    }
+    
+    private static func getQiitaFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("qiita.com") {
             if pathComponents.count >= 2, pathComponents[0] == "tags" {
                 return [qiitaTagCandidate(tag: pathComponents[1])].compactMap { $0 }
@@ -32,7 +73,10 @@ enum KnownSiteFeedGuesser {
                 return [qiitaUserCandidate(user: pathComponents[0])].compactMap { $0 }
             }
         }
-        
+        return nil
+    }
+    
+    private static func getZennFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("zenn.dev") {
             if pathComponents.count >= 2, pathComponents[0] == "topics" {
                 return [zennTopicCandidate(topic: pathComponents[1])].compactMap { $0 }
@@ -41,29 +85,43 @@ enum KnownSiteFeedGuesser {
                 return [zennUserCandidate(user: pathComponents[0])].compactMap { $0 }
             }
         }
-        
+        return nil
+    }
+    
+    private static func getHatenaFeed(host: String, pathComponents: [String], baseURL: URL) -> [FeedCandidate]? {
         if host.contains("hatenablog.com") || host.contains("hatenablog.jp") || host.contains("hateblo.jp") {
-            return [hatenaBlogCandidate(baseURL: url)].compactMap { $0 }
+            return [hatenaBlogCandidate(baseURL: baseURL)].compactMap { $0 }
         }
-        
+        return nil
+    }
+    
+    private static func getNoteFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("note.com"), pathComponents.count >= 1,
            !["search", "hashtag", "notes", "info"].contains(pathComponents[0]) {
             return [noteUserCandidate(user: pathComponents[0])].compactMap { $0 }
         }
-        
+        return nil
+    }
+    
+    private static func getRedditFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("reddit.com"), pathComponents.count >= 2, pathComponents[0] == "r" {
             return [redditSubredditCandidate(subreddit: pathComponents[1])].compactMap { $0 }
         }
-        
+        return nil
+    }
+    
+    private static func getDevToFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host == "dev.to", pathComponents.count >= 2, pathComponents[0] == "t" {
             return [devToTagCandidate(tag: pathComponents[1])].compactMap { $0 }
         }
-        
+        return nil
+    }
+    
+    private static func getWordpressFeeds(host: String, pathComponents: [String]) -> [FeedCandidate]? {
         if host.contains("wordpress.com"), pathComponents.count >= 2, pathComponents[0] == "tag" {
             return [wordPressTagCandidate(tag: pathComponents[1])].compactMap { $0 }
         }
-        
-        return []
+        return nil
     }
     
     // キーワード入力からFeedURLを推測する
@@ -162,11 +220,23 @@ enum KnownSiteFeedGuesser {
         components.query = nil
         components.fragment = nil
         guard let feedURL = components.url else { return nil }
-        return FeedCandidate(feedURL: feedURL, title: "\(baseURL.host ?? "はてなブログ") のフィード", siteURL: baseURL, summary: nil, iconURL: nil, source: .hatenaBlog)
+        let candidate = FeedCandidate(
+            feedURL: feedURL,
+            title: "\(baseURL.host ?? "はてなブログ") のフィード",
+            siteURL: baseURL,
+            summary: nil,
+            iconURL: nil,
+            source: .hatenaBlog
+        )
+        return candidate
     }
     
     private static func hatenaBlogSubdomainCandidate(subdomain: String) -> FeedCandidate? {
-        makeCandidate("https://\(subdomain).hatenablog.com/feed", title: "\(subdomain).hatenablog.com のフィード", source: .hatenaBlog)
+        makeCandidate(
+            "https://\(subdomain).hatenablog.com/feed",
+            title: "\(subdomain).hatenablog.com のフィード",
+            source: .hatenaBlog
+        )
     }
     
     private static func hatenaBookmarkSearchCandidate(keyword: String) -> FeedCandidate? {

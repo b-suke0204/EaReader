@@ -87,9 +87,10 @@ struct ArticleListFeature {
                     for article in articles {
 //                        article.id = UUID()
                         // 空でない場合は、既存の記事かどうか判断して、違うものは追加
-                        guard let _ = state.targetFeed?.articles.firstIndex(where: { target in
+                        let targetIndex = state.targetFeed?.articles.firstIndex(where: { target in
                             target.article.guid ?? "" == article.guid ?? ""
-                        }) else {
+                        })
+                        if targetIndex == nil {
                             // guidが存在しない場合は、追加
                             let newArticleModel = ArticleModel(article: article)
                             models.append(newArticleModel)

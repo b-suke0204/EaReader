@@ -111,14 +111,18 @@ enum ZennAPIService: PaginatedFeedProvider {
     
     // APIアクセス処理
     
-    private static func fetchPages(queryName: String, queryValue: String, maxPages: Int = 2) -> AnyPublisher<[Article], Never> {
+    private static func fetchPages(
+        queryName: String,
+        queryValue: String,
+        maxPages: Int = 2
+    ) -> AnyPublisher<[Article], Never> {
         let pagePublishers: [AnyPublisher<[ZennArticle], Never>] = (1...maxPages).map { page in
-                fetchPage(
-                    queryName: queryName,
-                    queryValue: queryValue,
-                    page: page
-                )
-            }
+            fetchPage(
+                queryName: queryName,
+                queryValue: queryValue,
+                page: page
+            )
+        }
         
         return Publishers.MergeMany(pagePublishers)
             .collect()
@@ -130,7 +134,11 @@ enum ZennAPIService: PaginatedFeedProvider {
             .eraseToAnyPublisher()
     }
     
-    private static func fetchPage(queryName: String, queryValue: String, page: Int) -> AnyPublisher<[ZennArticle], Never> {
+    private static func fetchPage(
+        queryName: String,
+        queryValue: String,
+        page: Int
+    ) -> AnyPublisher<[ZennArticle], Never> {
         guard var components = URLComponents(string: "https://zenn.dev/api/articles") else {
             return Just([]).eraseToAnyPublisher()
         }
@@ -174,7 +182,7 @@ enum ZennAPIService: PaginatedFeedProvider {
             id: UUID(),
             feedId: 0,
             articleTitle: TextSanitizer.cleanTitle(article.title),
-            articleLink: article.articleURL!,
+            articleLink: article.articleURL,
             summary: nil,
             guid: article.guid,
             isRead: false,

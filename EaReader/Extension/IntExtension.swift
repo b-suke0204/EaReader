@@ -11,6 +11,6 @@ extension Int {
     
     // 空判定用に追加
     func isZero() -> Bool {
-        return self == 0
+        self == 0
     }
 }

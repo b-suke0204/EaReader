@@ -91,7 +91,7 @@ struct DeviceMockModel {
         articles: [DeviceMockModel.article1, DeviceMockModel.article2, DeviceMockModel.article3]
     )
     
-    static private var article1 = ArticleModel(article:
+    private static var article1 = ArticleModel(article:
         Article(
             id: UUID(),
             feedId: 1,
@@ -109,7 +109,7 @@ struct DeviceMockModel {
         )
     )
     
-    static private var article2 = ArticleModel(article:
+    private static var article2 = ArticleModel(article:
         Article(
             id: UUID(),
             feedId: 1,
@@ -126,7 +126,7 @@ struct DeviceMockModel {
             updatedAt: Date()
         ))
     
-    static private var article3 = ArticleModel(article:
+    private static var article3 = ArticleModel(article:
         Article(
             id: UUID(),
             feedId: 1,
@@ -146,7 +146,7 @@ struct DeviceMockModel {
         )
     )
     
-    static private var userFeed1: UserFeed = UserFeed(
+    private static var userFeed1: UserFeed = UserFeed(
         id: 1,
         deviceId: "1",
         feedTitle: "テストタイトル",
@@ -157,7 +157,7 @@ struct DeviceMockModel {
         deletedAt: Date()
     )
     
-    static private var userFeed2: UserFeed = UserFeed(
+    private static var userFeed2: UserFeed = UserFeed(
         id: 2,
         deviceId: "2",
         feedTitle: "【SwiftUI】Listのスタイル",
@@ -168,7 +168,7 @@ struct DeviceMockModel {
         deletedAt: Date()
     )
     
-    static private var userFeed3: UserFeed = UserFeed(
+    private static var userFeed3: UserFeed = UserFeed(
         id: 3,
         deviceId: "3",
         feedTitle: "富士山の山頂に登ってみたら日の出が予想以上に綺麗だった件",

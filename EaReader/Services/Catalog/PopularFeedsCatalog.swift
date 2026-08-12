@@ -18,6 +18,52 @@ struct FeedCatalogEntry {
 
 // 有名な記事のカタログを用意 (AIから生成したものを使用)
 enum PopularFeedsCatalog {
+    // キーワードにあいまい一致するカタログエントリをスコア順に返す。
+    static func search(keyword: String) -> [FeedCandidate] {
+        let query = normalize(keyword)
+        guard !query.isEmpty else { return [] }
+        
+        let scored: [(entry: FeedCatalogEntry, score: Int)] = entries.compactMap { entry in
+            let names = [entry.title] + entry.aliases
+            let best = names.map { matchScore(alias: normalize($0), query: query) }.max() ?? 0
+            return best > 0 ? (entry, best) : nil
+        }
+        
+        return scored
+            .sorted { $0.score > $1.score }
+            .compactMap { scoredEntry -> FeedCandidate? in
+                guard let feedURL = URL(string: scoredEntry.entry.feedURLString) else { return nil }
+                return FeedCandidate(
+                    feedURL: feedURL,
+                    title: scoredEntry.entry.title,
+                    siteURL: scoredEntry.entry.siteURLString.flatMap { URL(string: $0) },
+                    summary: scoredEntry.entry.summary,
+                    iconURL: nil,
+                    source: .catalog
+                )
+            }
+    }
+    
+    private static func normalize(_ text: String) -> String {
+        text.lowercased()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "　", with: "")
+    }
+    
+    private static func matchScore(alias: String, query: String) -> Int {
+        guard !alias.isEmpty, !query.isEmpty else { return 0 }
+        if alias == query { return 100 }
+        if alias.hasPrefix(query) { return 85 }
+        if query.hasPrefix(alias) { return 75 }
+        if alias.contains(query) { return 60 }
+        if query.contains(alias) { return 45 }
+        return 0
+    }
+}
+
+// Feedのカタログを拡張して追加
+extension PopularFeedsCatalog {
     private static let entries: [FeedCatalogEntry] = [
         FeedCatalogEntry(
             title: "Qiita 人気記事",
@@ -340,47 +386,4 @@ enum PopularFeedsCatalog {
             summary: "開発者向け技術情報メディア"
         )
     ]
-    
-    // キーワードにあいまい一致するカタログエントリをスコア順に返す。
-    static func search(keyword: String) -> [FeedCandidate] {
-        let query = normalize(keyword)
-        guard !query.isEmpty else { return [] }
-        
-        let scored: [(entry: FeedCatalogEntry, score: Int)] = entries.compactMap { entry in
-            let names = [entry.title] + entry.aliases
-            let best = names.map { matchScore(alias: normalize($0), query: query) }.max() ?? 0
-            return best > 0 ? (entry, best) : nil
-        }
-        
-        return scored
-            .sorted { $0.score > $1.score }
-            .compactMap { scoredEntry -> FeedCandidate? in
-                guard let feedURL = URL(string: scoredEntry.entry.feedURLString) else { return nil }
-                return FeedCandidate(
-                    feedURL: feedURL,
-                    title: scoredEntry.entry.title,
-                    siteURL: scoredEntry.entry.siteURLString.flatMap { URL(string: $0) },
-                    summary: scoredEntry.entry.summary,
-                    iconURL: nil,
-                    source: .catalog
-                )
-            }
-    }
-    
-    private static func normalize(_ text: String) -> String {
-        text.lowercased()
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: "　", with: "")
-    }
-    
-    private static func matchScore(alias: String, query: String) -> Int {
-        guard !alias.isEmpty, !query.isEmpty else { return 0 }
-        if alias == query { return 100 }
-        if alias.hasPrefix(query) { return 85 }
-        if query.hasPrefix(alias) { return 75 }
-        if alias.contains(query) { return 60 }
-        if query.contains(alias) { return 45 }
-        return 0
-    }
 }

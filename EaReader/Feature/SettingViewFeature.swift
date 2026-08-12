@@ -16,8 +16,11 @@ struct SettingViewFeature {
         var navSettingPath = StackState<Path.State>()
     }
     
-    @Dependency(\.isPresented) var isPresented
-    @Dependency(\.dismiss) var dismiss
+    @Dependency(\.isPresented)
+    var isPresented
+    
+    @Dependency(\.dismiss)
+    var dismiss
     
     @Reducer
     enum Path {

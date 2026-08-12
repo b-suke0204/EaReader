@@ -131,19 +131,32 @@ final class FeedXMLParser: NSObject, XMLParserDelegate {
     private func handleItemEndElement(name: String, text: String) {
         switch name {
         case "title":
-            if (itemTitle ?? "").isEmpty && !text.isEmpty { itemTitle = text }
+            self.checkAndUpdateValueString(value: &itemTitle, text: text, allowsEmptyValue: true)
         case "link":
-            if itemLink == nil && !text.isEmpty { itemLink = text }
+            self.checkAndUpdateValueString(value: &itemLink, text: text)
         case "pubDate", "date", "published", "updated", "issued":
-            if itemDateString == nil && !text.isEmpty { itemDateString = text }
+            self.checkAndUpdateValueString(value: &itemDateString, text: text)
         case "description", "summary", "encoded", "content":
-            if (itemSummary ?? "").isEmpty && !text.isEmpty { itemSummary = text }
+            self.checkAndUpdateValueString(value: &itemSummary, text: text, allowsEmptyValue: true)
         case "guid", "id":
-            if itemGUID == nil && !text.isEmpty { itemGUID = text }
+            self.checkAndUpdateValueString(value: &itemGUID, text: text)
         case "item", "entry":
             finalizeCurrentItem()
         default:
             break
+        }
+    }
+    
+    // 26.08.12 B 値を確認後、更新
+    private func checkAndUpdateValueString(value: inout String?, text: String, allowsEmptyValue: Bool = false) {
+        if allowsEmptyValue {
+            if (value ?? "").isEmpty && !text.isEmpty {
+                value = text
+            }
+        } else {
+            if value == nil && !text.isEmpty {
+                value = text
+            }
         }
     }
 
@@ -152,7 +165,7 @@ final class FeedXMLParser: NSObject, XMLParserDelegate {
 
         let linkString = itemLink ?? (itemGUID?.hasPrefix("http") == true ? itemGUID : nil)
         let link = linkString.flatMap { URL(string: $0) }
-        let identifier = itemGUID ?? itemLink ?? itemTitle ?? UUID().uuidString
+//        let identifier = itemGUID ?? itemLink ?? itemTitle ?? UUID().uuidString
         let title = TextSanitizer.cleanTitle(itemTitle ?? "(タイトルなし)")
         let summary = itemSummary.map { TextSanitizer.cleanSummary($0) }
         let now = Date()
@@ -160,7 +173,7 @@ final class FeedXMLParser: NSObject, XMLParserDelegate {
             id: UUID(),
             feedId: 0,
             articleTitle: title,
-            articleLink: link!,
+            articleLink: link,
             summary: summary,
             guid: link?.absoluteString ?? "",
             isRead: false,

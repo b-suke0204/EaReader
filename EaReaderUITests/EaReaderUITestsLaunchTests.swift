@@ -8,7 +8,9 @@
 import XCTest
 
 final class EaReaderUITestsLaunchTests: XCTestCase {
-
+    
+    // 以下のコードは、XCodeで自動生成されるコードのため、swiftlint側のルールを無視する
+    // swiftlint:disable:next static_over_final_class
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

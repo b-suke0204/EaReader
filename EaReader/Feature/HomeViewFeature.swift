@@ -27,7 +27,7 @@ struct HomeViewFeature {
         
         // 最大記事数取得
         var articleMaxLength: Int {
-            return self.deviceModel?.device.maxLength ?? 100
+            self.deviceModel?.device.maxLength ?? 100
         }
     }
     
@@ -85,12 +85,13 @@ struct HomeViewFeature {
                 state.navPath.append(.articleList(ArticleListFeature.State()))
                 return .none
             case .backButtonTapped(let articles):
-                guard let _ = state.deviceModel else { return .none }
-                for i in 0..<(state.deviceModel?.userFeeds.count ?? 0) {
-                    if state.deviceModel?.userFeeds[i].id == state.targetUserFeed?.id {
-                        state.deviceModel?.userFeeds[i].articles = articles
-                    }
+                guard state.deviceModel != nil else { return .none }
+                if let index = state.deviceModel?.userFeeds.firstIndex(where: {
+                    $0.id == state.targetUserFeed?.id
+                }) {
+                    state.deviceModel?.userFeeds[index].articles = articles
                 }
+                
                 state.navPath.removeLast()
                 return .none
             case .destination(.presented(.searchViewFeature(.delegate(.updateItem(let feed))))):

@@ -23,7 +23,6 @@ import ComposableArchitecture
 @Reducer
 struct SafariWebFeature {
     
-    
     @ObservableState
     struct State: Equatable {
         

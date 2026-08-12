@@ -71,11 +71,18 @@ enum FeedFetcher {
             return false
         }
         let lower = prefix.lowercased()
-        guard lower.contains("<?xml") || lower.contains("<rss") || lower.contains("<feed") || lower.contains("rdf:rdf") else {
+        
+        let isContainXML = lower.contains("<?xml")
+        let isContainRSS = lower.contains("<rss")
+        let isContainHTML = lower.contains("<html")
+        let isContainFeed = lower.contains("<feed")
+        let isContainRDF = lower.contains("rdf:rdf")
+        
+        guard isContainXML || isContainRSS || isContainFeed || isContainRDF else {
             return false
         }
         // HTMLエラーページ等の誤検出を避ける
-        if lower.contains("<html") && !lower.contains("<rss") && !lower.contains("<feed") && !lower.contains("rdf:rdf") {
+        if isContainHTML && !isContainRSS && !isContainFeed && !isContainRDF {
             return false
         }
         return true

@@ -21,7 +21,7 @@ struct FeedCandidateMockModel {
         return candidates
     }
     
-    static private func getMockFeedCandidate() -> FeedCandidate? {
+    private static func getMockFeedCandidate() -> FeedCandidate? {
         guard let url = URL(string: "http://example.com") else { return nil }
         var candidate = FeedCandidate(feedURL: url, title: "テスト候補です", source: .direct)
         guard let siteURL = URL(string: "https://qiita.com") else { return nil }

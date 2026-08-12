@@ -15,7 +15,7 @@ public struct SegmentConfiguration<SegmentType: CapsuleSegmentType> {
     public var supportsRect: Bool  // 長方形にするかどうか
     
     public init(
-        backgroundColor: Color = Color(red: 213/255, green: 213/255, blue: 213/255),
+        backgroundColor: Color = Color(red: 213 / 255, green: 213 / 255, blue: 213 / 255),
         selectedColor: Color = .white,
         fontSize: CGFloat? = nil,
         targetSegmentType: [SegmentType]? = nil,
@@ -28,5 +28,3 @@ public struct SegmentConfiguration<SegmentType: CapsuleSegmentType> {
         self.supportsRect = supportsRect
     }
 }
-
-

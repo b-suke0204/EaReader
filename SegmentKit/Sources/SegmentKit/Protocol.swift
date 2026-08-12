@@ -10,5 +10,3 @@ import SwiftUI
 public protocol CapsuleSegmentType: CaseIterable, Identifiable, Equatable, Sendable {
     var title: String { get }
 }
-
-

@@ -17,7 +17,7 @@ struct HomeView: View {
     )
     var body: some View {
         VStack {
-            NavigationStack(path:$homeStore.scope(state: \.navPath, action: \.navPath)) {
+            NavigationStack(path: $homeStore.scope(state: \.navPath, action: \.navPath)) {
                 VStack {
                     EaReaderHeader(homeStore: homeStore, headerText: "EaReader")
                     if feedCount.isZero() {

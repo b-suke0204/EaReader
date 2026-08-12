@@ -24,7 +24,10 @@ enum FeedContentLoader {
     
     // APIで記事一覧を取得しつつ、タイトル・説明はRSS側から補完する。
     // APIが0件だった場合は通常のRSS解析にフォールバックする。
-    private static func loadViaAPI(provider: PaginatedFeedProvider.Type, candidate: FeedCandidate) -> AnyPublisher<ParsedFeed, Error> {
+    private static func loadViaAPI(
+        provider: PaginatedFeedProvider.Type,
+        candidate: FeedCandidate
+    ) -> AnyPublisher<ParsedFeed, Error> {
         let items = provider.fetchItems(feedURL: candidate.feedURL)
         let fallbackTitle = provider.fallbackTitle(feedURL: candidate.feedURL)
         let metadata = FeedFetcher.fetchAndParse(url: candidate.feedURL)

@@ -3,7 +3,10 @@
 
 import SwiftUI
 
-public struct CapsuleSegment<SegmentType: CapsuleSegmentType, Content: View>: View where SegmentType.AllCases == [SegmentType] {
+public struct CapsuleSegment<
+    SegmentType: CapsuleSegmentType,
+    Content: View
+>: View where SegmentType.AllCases == [SegmentType] {
     public let segmentSize: CGSize
     @Binding var selectedSegment: SegmentType
     public var configuration: SegmentConfiguration<SegmentType>
@@ -24,7 +27,7 @@ public struct CapsuleSegment<SegmentType: CapsuleSegmentType, Content: View>: Vi
     
     public var body: some View {
         let cases = configuration.targetSegmentType ?? SegmentType.allCases
-        let segmentWidth = (segmentSize.width - spacing*3) / CGFloat(cases.count) - spacing/2
+        let segmentWidth = (segmentSize.width - spacing * 3) / CGFloat(cases.count) - spacing / 2
         ZStack {
             CapsuleSegmentBackground(
                 segmentSize: segmentSize,
@@ -57,7 +60,7 @@ struct CapsuleSegmentBackground<SegmentType: CapsuleSegmentType>: View {
     var configuration: SegmentConfiguration<SegmentType>
     let spacing: CGFloat
     var body: some View {
-        let radius = configuration.supportsRect ? (spacing) : (segmentSize.height-2)/2
+        let radius = configuration.supportsRect ? (spacing) : (segmentSize.height - 2) / 2
         RoundedRectangle(cornerRadius: radius)
             .fill(configuration.backgroundColor)
     }
@@ -71,10 +74,10 @@ struct CapsuleSegmentSelectedItem<SegmentType: CapsuleSegmentType>: View where S
     let segmentWidth: CGFloat
     let spacing: CGFloat
     var body: some View {
-        let radius = configuration.supportsRect ? (spacing) : (segmentSize.height-2)/2
+        let radius = configuration.supportsRect ? (spacing) : (segmentSize.height - 2) / 2
         RoundedRectangle(cornerRadius: radius)
             .fill(.white)
-            .stroke(Color(red: 213/255, green: 213/255, blue: 213/255), style: StrokeStyle(lineWidth: 1))
+            .stroke(Color(red: 213 / 255, green: 213 / 255, blue: 213 / 255), style: StrokeStyle(lineWidth: 1))
             .frame(width: segmentWidth, height: segmentSize.height - 8)
             .offset(x: selectedOffset(segmentWidth: segmentWidth))
             .animation(.interactiveSpring(response: 0.3, dampingFraction: 0.75), value: selectedSegment)
@@ -91,7 +94,10 @@ struct CapsuleSegmentSelectedItem<SegmentType: CapsuleSegmentType>: View where S
 }
 
 // カスタムセグメントの中身
-struct CapsuleSegmentItem<SegmentType: CapsuleSegmentType, Content: View>: View where SegmentType.AllCases == [SegmentType] {
+struct CapsuleSegmentItem<
+    SegmentType: CapsuleSegmentType,
+    Content: View
+>: View where SegmentType.AllCases == [SegmentType] {
     let segmentSize: CGSize
     @Binding var selectedSegment: SegmentType
     var configuration: SegmentConfiguration<SegmentType>
@@ -108,7 +114,7 @@ struct CapsuleSegmentItem<SegmentType: CapsuleSegmentType, Content: View>: View 
                     }
                 }) {
                     ZStack {
-                        RoundedRectangle(cornerRadius: (segmentSize.height-2)/2)
+                        RoundedRectangle(cornerRadius: (segmentSize.height - 2) / 2)
                             .fill(.clear)
                         Text(segment.title)
                             .font(.system(size: configuration.fontSize ?? 15))
@@ -121,8 +127,3 @@ struct CapsuleSegmentItem<SegmentType: CapsuleSegmentType, Content: View>: View 
         }
     }
 }
-
-
-
-
-

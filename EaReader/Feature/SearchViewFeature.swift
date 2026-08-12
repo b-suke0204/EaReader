@@ -26,12 +26,15 @@ struct SearchViewFeature {
         var isLoading: Bool = false
         
         var candadateFeedsCount: Int {
-            return self.candidates.count
+            self.candidates.count
         }
     }
     
-    @Dependency(\.isPresented) var isPresented
-    @Dependency(\.dismiss) var dismiss
+    @Dependency(\.isPresented)
+    var isPresented
+    
+    @Dependency(\.dismiss)
+    var dismiss
     
     enum Action: BindableAction {
         case closeButtonTapped
@@ -55,9 +58,7 @@ struct SearchViewFeature {
     
     var body: some Reducer<State, Action> {
         BindingReducer()
-        Reduce {
-            state,
-            action in
+        Reduce { state, action in
             switch action {
             case .closeButtonTapped:
                 guard isPresented else { return .none }
@@ -88,20 +89,25 @@ struct SearchViewFeature {
                 print("Feedを登録します。")
                 print("\(String(describing: state.selectedCandidate))")
                 
-                guard let feed = state.selectedCandidate else { return .none }
+                guard let feed = state.selectedCandidate,
+                        let siteURL = feed.siteURL else { return .none }
                 
                 let now = Date()
                 let userFeed = UserFeed(
                     id: 0,
                     deviceId: "",
                     feedTitle: feed.title,
-                    link: feed.siteURL!,
+                    link: siteURL,
                     lastUpdatedAt: now,
                     createdAt: now,
                     updatedAt: now,
                     deletedAt: nil
                 )
-                let targetFeed: UserFeedModel<UserFeed, Article> = .init(userFeed: userFeed, articles: [], feedCandidate: feed)
+                let targetFeed: UserFeedModel<UserFeed, Article> = UserFeedModel(
+                    userFeed: userFeed,
+                    articles: [],
+                    feedCandidate: feed
+                )
                 // 処理をまとめてデータをHomeViewに送信後に画面を閉じるようにする
                 return .merge(
                     .send(.delegate(.updateItem(targetFeed))),

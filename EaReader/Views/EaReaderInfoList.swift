@@ -18,7 +18,7 @@ struct EaReaderInfoList: View {
                 Divider()
                 VStack {
                     AppMaintenanceHeader()
-                    DeleteCacheButton() {
+                    DeleteCacheButton {
                         print("キャッシュ削除ボタン")
                     }
                 }

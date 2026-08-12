@@ -30,7 +30,7 @@ enum PaginatedFeedProviderRegistry {
         DevToAPIService.self,
         GitHubAPIService.self,
         QiitaAPIService.self,
-        ZennAPIService.self,
+        ZennAPIService.self
     ]
     
     // ページネーション対応APIが公開されているプロバイダを返す

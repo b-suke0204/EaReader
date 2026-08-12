@@ -17,7 +17,13 @@ struct ImageButton: View {
     var btnColor: Color = .gray
     let btnAction: () -> Void
     
-    init(imageName: String, btnSize: CGSize, isSystem: Bool = true, btnColor: Color = .gray, btnAction: @escaping () -> Void) {
+    init(
+        imageName: String,
+        btnSize: CGSize,
+        isSystem: Bool = true,
+        btnColor: Color = .gray,
+        btnAction: @escaping () -> Void
+    ) {
         self.imageName = imageName
         self.btnSize = btnSize
         self.isSystem = isSystem
@@ -66,7 +72,13 @@ struct ToolbarImageButton: ToolbarContent {
     let isSystem: Bool
     let btnAction: () -> Void
     
-    init(imageName: String, btnColor: Color, placement: ToolbarItemPlacement, isSystem: Bool = true, btnAction: @escaping () -> Void) {
+    init(
+        imageName: String,
+        btnColor: Color,
+        placement: ToolbarItemPlacement,
+        isSystem: Bool = true,
+        btnAction: @escaping () -> Void
+    ) {
         self.imageName = imageName
         self.btnColor = btnColor
         self.placement = placement
@@ -151,7 +163,6 @@ struct HeaderView: View {
         }
     }
 }
-
 
 // 26.08.06 B 閉じるボタン
 struct CloseButton: View {

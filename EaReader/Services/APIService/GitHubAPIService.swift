@@ -227,7 +227,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
     @MainActor
     private static func makeArticle(from release: Release) -> Article {
         let now = Date()
-        let title = release.name?.isEmpty == false ? release.name! : release.tagName
+        let title = release.name?.isEmpty == false ? (release.name ?? "") : release.tagName
         
         return Article(
             id: UUID(),
@@ -295,7 +295,7 @@ enum GitHubAPIService: PaginatedFeedProvider {
             id: UUID(),
             feedId: 0,
             articleTitle: TextSanitizer.cleanTitle(eventTitle(type: event.type, repo: event.repo.name)),
-            articleLink: link!,
+            articleLink: link,
             summary: nil,
             guid: event.guid,
             isRead: false,
@@ -311,32 +311,53 @@ enum GitHubAPIService: PaginatedFeedProvider {
     
     // GithubのEventタイトルを取得
     private static func eventTitle(type: String, repo: String) -> String {
-        switch type {
-        case "PushEvent":
-            return "\(repo) にpushしました"
-        case "CreateEvent":
-            return "\(repo) でブランチ/タグを作成しました"
-        case "DeleteEvent":
-            return "\(repo) でブランチ/タグを削除しました"
-        case "PullRequestEvent":
-            return "\(repo) のプルリクエストを操作しました"
-        case "PullRequestReviewEvent",
-             "PullRequestReviewCommentEvent":
-            return "\(repo) のプルリクエストをレビューしました"
-        case "IssuesEvent":
-            return "\(repo) のIssueを操作しました"
-        case "IssueCommentEvent":
-            return "\(repo) のIssueにコメントしました"
-        case "WatchEvent":
-            return "\(repo) にStarを付けました"
-        case "ForkEvent":
-            return "\(repo) をフォークしました"
-        case "ReleaseEvent":
-            return "\(repo) でリリースを公開しました"
-        case "PublicEvent":
-            return "\(repo) を公開リポジトリにしました"
-        default:
-            return "\(repo) で \(type) が発生しました"
-        }
+        let titles: [String: String] = [
+            "PushEvent": "\(repo) にpushしました",
+            "CreateEvent": "\(repo) でブランチ/タグを作成しました",
+            "DeleteEvent": "\(repo) でブランチ/タグを削除しました",
+            "PullRequestEvent": "\(repo) のプルリクエストを操作しました",
+            "PullRequestReviewEvent": "\(repo) のプルリクエストをレビューしました",
+            "PullRequestReviewCommentEvent": "\(repo) のプルリクエストをレビューしました",
+            "IssuesEvent": "\(repo) のIssueを操作しました",
+            "IssueCommentEvent": "\(repo) のIssueにコメントしました",
+            "WatchEvent": "\(repo) にStarを付けました",
+            "ForkEvent": "\(repo) をフォークしました",
+            "ReleaseEvent": "\(repo) でリリースを公開しました",
+            "PublicEvent": "\(repo) を公開リポジトリにしました"
+        ]
+
+        return titles[type] ?? "\(repo) で \(type) が発生しました"
     }
+    
+    // MARK: 条件が16個あるので、Dictionary形式に変更 (swiftlintエラー対策)
+    // いつか直すかも？
+//    private static func eventTitle(type: String, repo: String) -> String {
+//        switch type {
+//        case "PushEvent":
+//            return "\(repo) にpushしました"
+//        case "CreateEvent":
+//            return "\(repo) でブランチ/タグを作成しました"
+//        case "DeleteEvent":
+//            return "\(repo) でブランチ/タグを削除しました"
+//        case "PullRequestEvent":
+//            return "\(repo) のプルリクエストを操作しました"
+//        case "PullRequestReviewEvent",
+//             "PullRequestReviewCommentEvent":
+//            return "\(repo) のプルリクエストをレビューしました"
+//        case "IssuesEvent":
+//            return "\(repo) のIssueを操作しました"
+//        case "IssueCommentEvent":
+//            return "\(repo) のIssueにコメントしました"
+//        case "WatchEvent":
+//            return "\(repo) にStarを付けました"
+//        case "ForkEvent":
+//            return "\(repo) をフォークしました"
+//        case "ReleaseEvent":
+//            return "\(repo) でリリースを公開しました"
+//        case "PublicEvent":
+//            return "\(repo) を公開リポジトリにしました"
+//        default:
+//            return "\(repo) で \(type) が発生しました"
+//        }
+//    }
 }
