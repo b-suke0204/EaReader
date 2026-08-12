@@ -21,4 +21,4 @@ jobs:
 
       # 危険なコードをなくすため、SwiftLintの黄色いエラーを無視しないようにする
       - name: Run swiftlint
-        run: swiftlint lint --strict
+        run: swiftlint lint --strict --config .swiftlint.yaml
