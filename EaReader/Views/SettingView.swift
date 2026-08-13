@@ -30,7 +30,7 @@ struct SettingView: View {
         } destination: { store in
             switch store.case {
             case .maxLengthMenu:
-                ArticleListLengthMenu(settingStore: settingStore)
+                ArticleListLengthMenu(homeStore: homeStore, settingStore: settingStore)
             }
         }
     }
@@ -39,6 +39,7 @@ struct SettingView: View {
 // 26.08.11 B 記事一覧表示の最大数を選択するメニュー
 struct ArticleListLengthMenu: View {
     private let limits: [Int] = [10, 20, 30, 50, 100, 150, 200]
+    let homeStore: StoreOf<HomeViewFeature>
     let settingStore: StoreOf<SettingViewFeature>
     var body: some View {
         VStack {
@@ -46,7 +47,7 @@ struct ArticleListLengthMenu: View {
                 ForEach(0..<limits.count, id: \.self) { index in
                     Button(action: {
                         let selectedNum = limits[index]
-                        settingStore.send(.closeMaxLengthMenu(num: selectedNum))
+                        settingStore.send(.setMaxLengthMenu(num: selectedNum, device: homeStore.deviceModel?.device))
                     }) {
                         VStack {
                             Text("最大\(limits[index])件 表示")

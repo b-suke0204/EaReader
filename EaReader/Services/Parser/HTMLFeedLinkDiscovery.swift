@@ -11,7 +11,7 @@ import Foundation
  一般的なサイトのHTMLに含まれる <link rel="alternate" type="application/rss+xml" ...>を
  正規表現で検出し、フィードURLを見つける。YouTubeのようにHTMLに埋め込まれたフィードリンクを持つサイトにも幅広く対応できる。
 */
-enum HTMLFeedLinkDiscovery {
+final class HTMLFeedLinkDiscovery {
     struct DiscoveredLink {
         let title: String?
         let url: URL

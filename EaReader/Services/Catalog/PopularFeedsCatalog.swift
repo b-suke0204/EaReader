@@ -17,7 +17,7 @@ struct FeedCatalogEntry {
 }
 
 // 有名な記事のカタログを用意 (AIから生成したものを使用)
-enum PopularFeedsCatalog {
+final class PopularFeedsCatalog {
     // キーワードにあいまい一致するカタログエントリをスコア順に返す。
     static func search(keyword: String) -> [FeedCandidate] {
         let query = normalize(keyword)

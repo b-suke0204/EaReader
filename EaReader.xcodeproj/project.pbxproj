@@ -84,7 +84,9 @@
 				UIComponents/EaReaderHeaderComponents.swift,
 				UIComponents/NoFeedComponents.swift,
 				UIComponents/UIComponents.swift,
+				Utility/APISession.swift,
 				Utility/DateUtility.swift,
+				Utility/FileUtility.swift,
 				ViewModel/FeedListViewModel.swift,
 				Views/ArticleList/ArticleListLeftItem.swift,
 				Views/ArticleList/ArticleListRightItem.swift,
@@ -138,7 +140,9 @@
 				UIComponents/EaReaderHeaderComponents.swift,
 				UIComponents/NoFeedComponents.swift,
 				UIComponents/UIComponents.swift,
+				Utility/APISession.swift,
 				Utility/DateUtility.swift,
+				Utility/FileUtility.swift,
 				ViewModel/FeedListViewModel.swift,
 				Views/ArticleList/ArticleListLeftItem.swift,
 				Views/ArticleList/ArticleListRightItem.swift,
@@ -575,6 +579,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EaReader/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "開発環境で使用";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -610,6 +615,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EaReader/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "開発環境で使用";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

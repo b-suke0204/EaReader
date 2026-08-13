@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum GitHubAPIService: PaginatedFeedProvider {
+final class GitHubAPIService: PaginatedFeedProvider {
     // API応答用のモデル (Release)
     private struct Release: Decodable {
         let id: Int

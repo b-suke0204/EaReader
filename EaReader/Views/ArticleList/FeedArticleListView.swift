@@ -59,7 +59,7 @@ struct FeedArticleList: View {
                 placement: .topBarTrailing,
                 btnAction: {
                     print("いいね確認が押されました")
-                    articleListFeature.send(.checkFacorites)
+                    articleListFeature.send(.checkFavorites)
                 }
             )
             ToolbarImageButton(

@@ -62,8 +62,7 @@ struct DeviceMockModel {
     ) -> DeviceModel<Device, U, A> {
         let device: Device = Device(
             id: 1,
-            deviceId: "1",
-            maxLength: 100,
+            deviceId: UUID(),
             lastSeenAt: Date(),
             latestUpdatedAt: Date(),
             articleDisplayCount: 0,
@@ -148,7 +147,7 @@ struct DeviceMockModel {
     
     private static var userFeed1: UserFeed = UserFeed(
         id: 1,
-        deviceId: "1",
+        deviceId: UUID(),
         feedTitle: "テストタイトル",
         link: URL(string: "https://example.com/feed")!,
         lastUpdatedAt: Date(),
@@ -159,7 +158,7 @@ struct DeviceMockModel {
     
     private static var userFeed2: UserFeed = UserFeed(
         id: 2,
-        deviceId: "2",
+        deviceId: UUID(),
         feedTitle: "【SwiftUI】Listのスタイル",
         link: URL(string: "https://qiita.com/SNQ-2001/items/c5a839503fabf6fc8b35")!,
         lastUpdatedAt: Date(),
@@ -170,7 +169,7 @@ struct DeviceMockModel {
     
     private static var userFeed3: UserFeed = UserFeed(
         id: 3,
-        deviceId: "3",
+        deviceId: UUID(),
         feedTitle: "富士山の山頂に登ってみたら日の出が予想以上に綺麗だった件",
         link: URL(string: "https://example.com/feed")!,
         lastUpdatedAt: Date(),

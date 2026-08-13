@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum QiitaAPIService: PaginatedFeedProvider {
+final class QiitaAPIService: PaginatedFeedProvider {
     // API応答用のModel
     private struct QiitaItem: Decodable {
         let id: String

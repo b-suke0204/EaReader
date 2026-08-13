@@ -29,14 +29,16 @@ struct SettingViewFeature {
     
     enum Action: BindableAction {
         case closeButtonTapped
-        case closeMaxLengthMenu(num: Int)
+        case setMaxLengthMenu(num: Int, device: Device?)
+        case closeMaxLengthMenu(device: Device?)
         case maxLengthMenuButtonTapped
         case binding(BindingAction<State>)
         case navSettingPath(StackActionOf<Path>)
         case delegate(Delegate)
         
         public enum Delegate {
-            case updateMaxLength(num: Int)
+            case updateMaxLength(device: Device)
+            case storeLatestDevice(device: Device)  // 最新のデバイス情報保存
         }
     }
     
@@ -49,9 +51,38 @@ struct SettingViewFeature {
                 return .run { _ in
                     await dismiss()
                 }
-            case .closeMaxLengthMenu(let num):
+            case .setMaxLengthMenu(let num, let device):
+                // ここでDeviceを更新させる
+                return .run { send in
+                    guard var device = device else {
+                        await send(.closeMaxLengthMenu(device: nil))
+                        return
+                    }
+                    device.articleDisplayCount = num
+                    print("ディスプレイ数: \(device.articleDisplayCount)")
+                    let urlString = "http://localhost/api/devices/\(EaReaderConfig.deviceId)"
+                    if let jsonEncode = await APISession.jsonEncode(from: device) {
+                        let result: Result<Device, SessionErrorType> = await APISession.connect(
+                            from: urlString,
+                            data: jsonEncode,
+                            httpMethod: .PATCH
+                        )
+                        
+                        switch result {
+                        case .success(let latestDevice):
+                            print("最新ディスプレイ数: \(latestDevice.articleDisplayCount)")
+                            await send(.closeMaxLengthMenu(device: latestDevice))
+                            return
+                        case .failure(let message):
+                            print("更新に失敗しました: \(message)")
+                        }
+                    }
+                    await send(.closeMaxLengthMenu(device: nil))
+                }
+            case .closeMaxLengthMenu(let device):
                 state.navSettingPath.removeLast()
-                return .send(.delegate(.updateMaxLength(num: num)))  // HomeViewに伝播
+                guard let device = device else { return .none }
+                return .send(.delegate(.updateMaxLength(device: device)))
             case .maxLengthMenuButtonTapped:
                 state.navSettingPath.append(.maxLengthMenu)
                 return .none

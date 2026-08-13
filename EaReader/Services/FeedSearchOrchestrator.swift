@@ -10,7 +10,7 @@ import Combine
 
 // 26.08.09 B Feed検索の入口
 // ここでキーワード検索とURL検索の処理を呼び出す
-enum FeedSearchOrchestrator {
+final class FeedSearchOrchestrator {
     
     // フィードURLの候補群を実際にフェッチして検証し、成功したものだけを
     // パース結果のタイトル・説明で更新して返す。

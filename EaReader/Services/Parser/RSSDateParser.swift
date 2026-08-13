@@ -14,7 +14,7 @@ import Foundation
  RSS → RFC822
  Atom → ISO8601
 */
-enum RSSDateParser {
+final class RSSDateParser {
     
     private static let iso8601Fractional: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()

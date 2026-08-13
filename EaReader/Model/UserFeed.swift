@@ -7,11 +7,14 @@
 
 import Foundation
 
-protocol UserFeedType: Codable, Identifiable, Equatable {
+protocol UserFeedType: AnyJSONType, Identifiable, Equatable {
     var id: Int { get set }
-    var deviceId: String { get set }  // UUID String
+    var deviceId: UUID { get set }  // UUID String
     var feedTitle: String { get set }
     var link: URL { get set }
+    var summary: String? { get set }
+    var iconURL: URL? { get set }
+    var source: String? { get set }
     var lastUpdatedAt: Date { get set }
     var createdAt: Date { get set }
     var updatedAt: Date { get set }
@@ -20,9 +23,12 @@ protocol UserFeedType: Codable, Identifiable, Equatable {
 
 struct UserFeed: UserFeedType {
     var id: Int
-    var deviceId: String  // UUID String
+    var deviceId: UUID  // UUID String
     var feedTitle: String
     var link: URL
+    var summary: String?
+    var iconURL: URL?
+    var source: String?
     var lastUpdatedAt: Date
     var createdAt: Date
     var updatedAt: Date
@@ -33,6 +39,9 @@ struct UserFeed: UserFeedType {
         case deviceId = "device_id"
         case feedTitle = "feed_title"
         case link = "link"
+        case summary = "summary"
+        case iconURL = "icon_url"
+        case source = "source"
         case lastUpdatedAt = "last_updated_at"
         case createdAt = "created_at"
         case updatedAt = "updated_at"

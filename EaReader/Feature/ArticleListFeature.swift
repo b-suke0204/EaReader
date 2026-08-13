@@ -66,7 +66,7 @@ struct ArticleListFeature {
         case itemTapped(articleModel: ArticleModel<Article>)
         case updateFavoriteStatus(articleModel: ArticleModel<Article>)
         case updateArchiveStatus(articleModel: ArticleModel<Article>)
-        case checkFacorites  // いいね確認
+        case checkFavorites  // いいね確認
         case checkArchives  // アーカイブ確認
         case destination(PresentationAction<Destination.Action>)
     }
@@ -85,14 +85,15 @@ struct ArticleListFeature {
                     // DBにあるArticleデータが反映されていたら、それをマージさせる
                     let articles = parsedFeed.items
                     for article in articles {
-//                        article.id = UUID()
                         // 空でない場合は、既存の記事かどうか判断して、違うものは追加
                         let targetIndex = state.targetFeed?.articles.firstIndex(where: { target in
                             target.article.guid ?? "" == article.guid ?? ""
                         })
                         if targetIndex == nil {
                             // guidが存在しない場合は、追加
-                            let newArticleModel = ArticleModel(article: article)
+                            guard let feedId = state.targetFeed?.userFeed.id else { continue }
+                            var newArticleModel = ArticleModel(article: article)
+                            newArticleModel.article.feedId = feedId
                             models.append(newArticleModel)
                             continue
                         }
@@ -119,19 +120,11 @@ struct ArticleListFeature {
             case .updateArchiveStatus(let articleModel):
                 if !updateArchiveStatus(state: &state, articleModel: articleModel) { return .none }
                 return .none
-            case .checkFacorites:
-                if state.browserMode == .favorites {
-                    state.browserMode = .all
-                    return .none
-                }
-                state.browserMode = .favorites
+            case .checkFavorites:
+                state.browserMode = state.browserMode == .favorites ? .all : .favorites
                 return .none
             case .checkArchives:
-                if state.browserMode == .archives {
-                    state.browserMode = .all
-                    return .none
-                }
-                state.browserMode = .archives
+                state.browserMode = state.browserMode == .archives ? .all : .archives
                 return .none
             case .destination:
                 return .none
@@ -181,11 +174,9 @@ struct ArticleListFeature {
             do {
                 for try await parsed in await FeedContentLoader.load(candidate: candidate).values {
                     var merged = parsed
-                    
                     merged.items = (cachedHistory + merged.items).sorted {
                         $0.publishedAt ?? .distantPast > $1.publishedAt ?? .distantPast
                     }
-                    
                     await send(.loadArticlesResponse(.success(merged)))
                 }
             } catch {
