@@ -32,7 +32,7 @@ jobs:
 
       # Docker環境があるか確認
       - name: Check Docker
-        run |
+        run: |
           docker --version
           docker info
         
