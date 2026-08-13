@@ -13,7 +13,66 @@ jobs:
       - name: CheckOut
         uses: actions/checkout@v4
 
-      - name: Test
+      # Laravel側の環境設定とテスト実行
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      # envファイルをexampleからコピーして作成
+      - name: Setup Laravel Environment
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: cp .env.example .env
+
+      # Laravelの依存関係構築 composer.json
+      - name: Install Composer Dependency
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: composer install --no-interaction --prefer-dist
+
+      # Sail起動 compose.yaml
+      - name: Start Laravel Sail
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: ./vendor/bin/sail up -d
+
+      # APPキー生成 (.env.exampleをコピーしただけだとAPPKEYが空になるらしい)
+      - name: Generate Laravel App Key
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: ./vendor/bin/sail artisan key:generate --force
+
+      - name: Wait for MySQL
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        # MySQLが接続可能状態になるまで2秒ずつ確認する(60秒間) 
+        run: |
+          for i in {1..30}; do
+            if ./vendor/bin/sail exec mysql \
+              mysqladmin ping \
+              -h localhost \
+              -u sail \
+              -ppassword \
+              --silent; then
+              echo "MySQL is ready!!"
+              exit 0
+            fi
+
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+          echo "MySQL failed to start within 60 seconds..."
+          exit 1
+
+      # migration実行
+      - name: Run migration
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: ./vendor/bin/sail artisan migrate --force
+
+      # テスト実行
+      - name: Laravel Test
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: ./vendor/bin/sail artisan test
+
+      # iOSアプリ側のテスト実行
+      - name: EaReader Test
         run: |
           set -o pipefail
 
