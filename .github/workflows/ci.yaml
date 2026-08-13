@@ -14,10 +14,11 @@ jobs:
         uses: actions/checkout@v4
 
       # Laravel側の環境設定とテスト実行
+      # PHPバージョンは、Laravelのcompose.yamlで設定されているものにする
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.5'
 
       # envファイルをexampleからコピーして作成
       - name: Setup Laravel Environment
