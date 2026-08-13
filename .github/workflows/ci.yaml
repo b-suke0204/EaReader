@@ -32,7 +32,7 @@ jobs:
 
       # Docker環境構築
       - name: Setup Docker
-        run: docker/setup-docker-action@v5
+        uses: docker/setup-docker-action@v5
 
       # Docker環境があるか確認
       - name: Check Docker
