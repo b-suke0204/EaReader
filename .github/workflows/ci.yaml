@@ -108,20 +108,19 @@ jobs:
             > /tmp/laravel.log 2>&1 &
 
       # Laravel API起動確認
+      # 8000のポートがサーバーになっているかで判断する
       - name: Wait for Laravel
         run: |
           for i in {1..30}; do
-            if curl --silent --fail \
-              http://127.0.0.1:8000 \
-              > /dev/null; then
+            if nc -z 127.0.0.1 8000; then
               echo "Laravel is ready!!"
               exit 0
             fi
-
+      
             echo "Waiting for Laravel..."
             sleep 2
           done
-
+      
           echo "Laravel failed to start within 60 seconds..."
           cat /tmp/laravel.log
           exit 1
