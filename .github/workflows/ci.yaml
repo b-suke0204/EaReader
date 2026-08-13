@@ -30,6 +30,12 @@ jobs:
         working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
         run: composer install --no-interaction --prefer-dist
 
+      # Docker環境があるか確認
+      - name: Check Docker
+        run |
+          docker --version
+          docker info
+        
       # Sail起動 compose.yaml
       - name: Start Laravel Sail
         working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
