@@ -34,12 +34,18 @@ jobs:
       - name: Setup Docker
         uses: docker/setup-docker-action@v5
 
+      # Docker Composeインストール
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       # Docker環境があるか確認
       - name: Check Docker
         run: |
           docker --version
           docker info
-          docker compose version
+          docker compose --version
 
       - name: Check Sail Version
         working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
