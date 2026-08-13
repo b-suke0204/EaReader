@@ -39,6 +39,11 @@ jobs:
         run: |
           docker --version
           docker info
+          docker compose version
+
+      - name: Check Sail Version
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: composer show laravel/sail
         
       # Sail起動 compose.yaml
       - name: Start Laravel Sail
