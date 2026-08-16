@@ -12,6 +12,7 @@ enum HomeViewLoadingState {
     case loading
     case noFeeds
     case feeds
+    case error
 }
 
 // HomeView用のFeature
@@ -28,10 +29,14 @@ struct HomeViewFeature {
         var targetUserFeed: UserFeedModel<UserFeed, Article>?
         
         var isLoading: Bool = false  // 画面読み込みフラグ
+        var isLoaingError: Bool = false  // 読み込みエラー
         
         var loadingState: HomeViewLoadingState {
             if isLoading {
                 return .loading
+            }
+            if isLoaingError {
+                return .error
             }
             if registeredFeedCount.isZero() {
                 return .noFeeds
@@ -79,6 +84,7 @@ struct HomeViewFeature {
         case fetchArticles(feeds: [UserFeedModel<UserFeed, Article>])  // 記事読み込み
         case storeArticles(articles: [Int: [ArticleModel<Article>]])
         case storeUserFeeds(feeds: [UserFeedModel<UserFeed, Article>])  // 取得したfeedsを入れる
+        case showLoadingError  // 読み込み失敗時のエラー表示
         case alert(PresentationAction<Alert>)
         case destination(PresentationAction<Destination.Action>)
         case navPath(StackActionOf<Path>)
@@ -146,15 +152,22 @@ struct HomeViewFeature {
                             print("デバイスが保存されました")
                         case .failure(let error):
                             print("デバイスの保存に失敗しました: \(error)")
+                            
                         }
                         
                         do {
                             try await FileUtility.saveDeviceInfo(of: jsonData)
                         } catch {
                             print("データの保存に失敗しました: \(error)")
+                            await send(.showLoadingError)
+                            return
                         }
                         
-                        guard let device = fetchedDevice else { return }
+                        guard let device = fetchedDevice else {
+                            print("デバイスがありません")
+                            await send(.showLoadingError)
+                            return
+                        }
                         let deviceModel: DeviceModel = DeviceModel<Device, UserFeed, Article>(
                             device: device,
                             userFeeds: []
@@ -162,6 +175,10 @@ struct HomeViewFeature {
                         await send(.deviceModelLoaded(deviceModel))
                     }
                 }
+            case .showLoadingError:
+                state.isLoading = false
+                state.isLoaingError = true
+                return .none
             case .deviceModelLoaded(let deviceModel):
                 state.deviceModel = deviceModel
                 // deviceIdでfeedを検索するアクションに飛ばす

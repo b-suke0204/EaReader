@@ -43,6 +43,7 @@ struct SearchViewFeature {
         case searchedFeed
         case searchFeed
         case searchCompleted([FeedCandidate])
+        case showRegistrationAlert  // 登録失敗アラート
         case delegate(Delegate)
         case binding(BindingAction<State>)
         
@@ -126,7 +127,8 @@ struct SearchViewFeature {
                             await send(.delegate(.updateItem(targetFeed)))
                             await dismiss()
                         case .failure:
-                            await dismiss()
+                            await send(.showRegistrationAlert)
+                            return
                         }
                     }
                     await dismiss()
@@ -155,6 +157,15 @@ struct SearchViewFeature {
             case .registerAlert(.presented(.cancel)):
                 state.selectedCandidate = nil
                 print("Feed登録をキャンセルしました")
+                return .none
+            case .showRegistrationAlert:  // フィード登録エラーアラート
+                state.alertRegistration = .init(title: {
+                    TextState("フィード登録に失敗しました")
+                }, actions: {
+                    ButtonState(role: .none, action: .cancel) {
+                        TextState("OK")
+                    }
+                })
                 return .none
             case .registerAlert(.dismiss):
                 state.selectedCandidate = nil
