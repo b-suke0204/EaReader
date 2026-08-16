@@ -31,6 +31,8 @@ struct HomeView: View {
                         NoFeedView(homeStore: homeStore)
                     case .feeds:
                         FeedList(homeStore: homeStore)
+                    case .error:
+                        ContentUnavailableView("読み込みに失敗しました...", systemImage: "exclamationmark.icloud")
                     }
                 }
             } destination: { store in
