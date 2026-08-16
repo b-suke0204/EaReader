@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum KnownSiteFeedGuesser {
+final class KnownSiteFeedGuesser {
     // URL入力からの推測する
     static func guess(forURL url: URL) -> [FeedCandidate] {
         guard let host = url.host?.lowercased() else { return [] }

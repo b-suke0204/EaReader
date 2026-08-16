@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 // FeedのDomainを推測する処理
-enum GenericDomainFeedGuesser {
+final class GenericDomainFeedGuesser {
     private static let candidateTLDs = ["com", "net", "org", "io", "dev", "jp"]
     private static let commonFeedPaths = [
         "/feed", "/feed/", "/rss", "/rss/", "/rss.xml",

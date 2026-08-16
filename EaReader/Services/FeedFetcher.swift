@@ -14,7 +14,7 @@ enum FeedFetchError: Error {
     case decodingFailed  // デコード失敗
 }
 
-enum FeedFetcher {
+final class FeedFetcher {
     private static let feedUserAgent = "SearchRSS/1.0 (iOS; +https://example.com)"
     private static let browserUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS like Mac OS X) SearchRSS/1.0"
     

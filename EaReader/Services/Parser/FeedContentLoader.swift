@@ -14,7 +14,7 @@ private struct FeedMetadata {
     var link: URL?
 }
 
-enum FeedContentLoader {
+final class FeedContentLoader {
     static func load(candidate: FeedCandidate) -> AnyPublisher<ParsedFeed, Error> {
         guard let provider = PaginatedFeedProviderRegistry.provider(for: candidate.feedURL) else {
             return FeedFetcher.fetchAndParse(url: candidate.feedURL)

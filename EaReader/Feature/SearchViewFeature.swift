@@ -89,32 +89,69 @@ struct SearchViewFeature {
                 print("Feedを登録します。")
                 print("\(String(describing: state.selectedCandidate))")
                 
-                guard let feed = state.selectedCandidate,
-                        let siteURL = feed.siteURL else { return .none }
+//                guard let feed = state.selectedCandidate else { return .none }
+                guard let feedCandidate = state.selectedCandidate else { return .none }
                 
                 let now = Date()
                 let userFeed = UserFeed(
-                    id: 0,
-                    deviceId: "",
-                    feedTitle: feed.title,
-                    link: siteURL,
+                    id: 0,  // このidは、DBにあるIDに置き換えるので、0でOK
+                    deviceId: EaReaderConfig.deviceId,
+                    feedTitle: feedCandidate.title,
+                    link: feedCandidate.feedURL,
+                    summary: feedCandidate.summary,
+                    iconURL: feedCandidate.iconURL,
+                    source: feedCandidate.source.rawValue,
                     lastUpdatedAt: now,
                     createdAt: now,
                     updatedAt: now,
                     deletedAt: nil
                 )
-                let targetFeed: UserFeedModel<UserFeed, Article> = UserFeedModel(
-                    userFeed: userFeed,
-                    articles: [],
-                    feedCandidate: feed
-                )
+                
                 // 処理をまとめてデータをHomeViewに送信後に画面を閉じるようにする
-                return .merge(
-                    .send(.delegate(.updateItem(targetFeed))),
-                    .run { _ in
-                        await dismiss()
+                return .run { send in
+                    if let jsonEncode = await APISession.jsonEncode(from: userFeed) {
+                        let urlString = "http://localhost/api/userFeeds"
+                        let result: Result<UserFeed, SessionErrorType> = await APISession.connect(
+                            from: urlString,
+                            data: jsonEncode
+                        )
+                        switch result {
+                        case .success(let feed):
+                            print("終わりました: \(feed)")
+                            let targetFeed: UserFeedModel<UserFeed, Article> = UserFeedModel(
+                                userFeed: feed,
+                                articles: [],
+                                feedCandidate: feedCandidate
+                            )
+                            await send(.delegate(.updateItem(targetFeed)))
+                            await dismiss()
+                        case .failure:
+                            await dismiss()
+                        }
                     }
-                )
+                    await dismiss()
+                }
+                
+//                return .merge(
+//                    .send(.delegate(.updateItem(targetFeed))),
+//                    .run { _ in
+//                        if let jsonEncode = await APISession.jsonEncode(from: userFeed) {
+//                            let urlString = "http://localhost/api/userFeeds"
+//                            let result: Result<UserFeed, SessionErrorType> = await APISession.connect(
+//                                from: urlString,
+//                                data: jsonEncode
+//                            )
+//                            switch result {
+//                            case .success(let feed):
+//                                print("終わりました: \(feed)")
+//                                await dismiss()
+//                            case .failure:
+//                                await dismiss()
+//                            }
+//                        }
+//                        await dismiss()
+//                    }
+//                )
             case .registerAlert(.presented(.cancel)):
                 state.selectedCandidate = nil
                 print("Feed登録をキャンセルしました")

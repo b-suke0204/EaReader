@@ -19,7 +19,7 @@ enum DateFormatType: String {
 }
 
 // 26.08.04 B 日付用ユーティリティ
-class DateUtility {
+final class DateUtility {
     
     // Dateの文字列取得
     static func getDateString(from date: Date, formatType: DateFormatType) -> String {

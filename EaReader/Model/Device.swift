@@ -7,10 +7,9 @@
 
 import Foundation
 
-protocol DeviceType: Codable, Equatable {
+protocol DeviceType: AnyJSONType, Equatable {
     var id: Int { get set }
-    var deviceId: String { get set }
-    var maxLength: Int { get set }
+    var deviceId: UUID { get set }
     var lastSeenAt: Date { get set }
     var latestUpdatedAt: Date { get set }
     var articleDisplayCount: Int { get set }
@@ -20,8 +19,7 @@ protocol DeviceType: Codable, Equatable {
 
 struct Device: DeviceType {
     var id: Int
-    var deviceId: String
-    var maxLength: Int
+    var deviceId: UUID
     var lastSeenAt: Date
     var latestUpdatedAt: Date
     var articleDisplayCount: Int
@@ -31,7 +29,6 @@ struct Device: DeviceType {
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case deviceId = "device_id"
-        case maxLength = "max_length"
         case lastSeenAt = "last_seen_at"
         case latestUpdatedAt = "latest_updated_at"
         case articleDisplayCount = "article_display_count"

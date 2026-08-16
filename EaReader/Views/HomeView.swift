@@ -20,9 +20,16 @@ struct HomeView: View {
             NavigationStack(path: $homeStore.scope(state: \.navPath, action: \.navPath)) {
                 VStack {
                     EaReaderHeader(homeStore: homeStore, headerText: "EaReader")
-                    if feedCount.isZero() {
+                    // 26.08.13 B テストで表示
+//                    Text("\(String(describing: homeStore.deviceModel?.device.deviceId))")
+                    
+                    switch homeStore.loadingState {
+                    case .loading:
+                        ProgressView("読み込み中")
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    case .noFeeds:
                         NoFeedView(homeStore: homeStore)
-                    } else {
+                    case .feeds:
                         FeedList(homeStore: homeStore)
                     }
                 }
@@ -33,6 +40,7 @@ struct HomeView: View {
                 }
             }
         }
+        .alert(store: homeStore.scope(state: \.$alert, action: \.alert))
         .task {  // 初回起動時読み込み
             homeStore.send(.onAppear)
         }

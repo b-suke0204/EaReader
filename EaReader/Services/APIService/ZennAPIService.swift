@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum ZennAPIService: PaginatedFeedProvider {
+final class ZennAPIService: PaginatedFeedProvider {
     // API応答用のModels
     private struct ArticlesResponse: Decodable {
         let articles: [ZennArticle]

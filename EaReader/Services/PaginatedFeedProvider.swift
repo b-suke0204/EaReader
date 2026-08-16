@@ -23,7 +23,7 @@ protocol PaginatedFeedProvider {
 */
 
 // ページネーション用プロバイダを登録
-enum PaginatedFeedProviderRegistry {
+final class PaginatedFeedProviderRegistry {
     
     // ページネーションありAPIの
     static let all: [PaginatedFeedProvider.Type] = [

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 // Dev.toのAPIページネーションプロバイダを処理するクラス
-enum DevToAPIService: PaginatedFeedProvider {
+final class DevToAPIService: PaginatedFeedProvider {
     // Dev.to記事の情報
     private struct DevArticle: Decodable {
         let id: Int

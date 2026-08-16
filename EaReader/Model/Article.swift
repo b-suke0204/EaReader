@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ArticleType: Codable, Equatable {
+protocol ArticleType: AnyJSONType, Equatable {
     var id: UUID { get set }
     var feedId: Int { get set }
     var articleTitle: String { get set }
@@ -20,7 +20,7 @@ protocol ArticleType: Codable, Equatable {
     var thumbnailURL: URL? { get set }
     var publishedAt: Date? { get set }
     var contentUpdatedAt: Date? { get set }
-    var fetchedAt: Date { get set }
+    var fetchedAt: Date? { get set }
     var createdAt: Date { get set }
     var updatedAt: Date { get set }
 }
@@ -40,7 +40,7 @@ struct Article: ArticleType {
     var thumbnailURL: URL?  // 追加
     var publishedAt: Date?
     var contentUpdatedAt: Date?
-    var fetchedAt: Date
+    var fetchedAt: Date?
     var createdAt: Date
     var updatedAt: Date
     

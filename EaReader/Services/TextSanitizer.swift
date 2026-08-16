@@ -8,7 +8,7 @@
 import Foundation
 
 // 文字列を有効なものに変換する処理
-enum TextSanitizer {
+final class TextSanitizer {
     private static let namedEntities: [String: String] = [
         "&amp;": "&",
         "&lt;": "<",

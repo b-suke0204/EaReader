@@ -29,7 +29,7 @@ actor ArticleThumbnailCache {
     }
 }
 
-enum ArticleThumbnailResolver {
+final class ArticleThumbnailResolver {
     // 記事ページを取得し、og:image / twitter:image をサムネイルURLとして返す。
     // 見つからない場合、あるいは取得に失敗した場合は nil を返す(キャッシュにも記録する)。
     static func resolveThumbnail(for articleURL: URL) -> AnyPublisher<URL?, Never> {

@@ -5,8 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  integration-test:
     runs-on: macos-latest
+    name: IntegrationTest
     timeout-minutes: 15
 
     steps:
@@ -14,41 +15,26 @@ jobs:
         uses: actions/checkout@v4
 
       # Laravel側の環境設定とテスト実行
+      # PHPバージョンは、Laravelのcompose.yamlで設定されているものにする
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.5'
 
-      # envファイルをexampleからコピーして作成
-      - name: Setup Laravel Environment
-        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: cp .env.example .env
+      # MySQLをインストール
+      - name: Setup MySQL
+        run: |
+          brew install mysql
+          brew services start mysql
 
-      # Laravelの依存関係構築 composer.json
-      - name: Install Composer Dependency
-        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: composer install --no-interaction --prefer-dist
-
-      # Sail起動 compose.yaml
-      - name: Start Laravel Sail
-        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: ./vendor/bin/sail up -d
-
-      # APPキー生成 (.env.exampleをコピーしただけだとAPPKEYが空になるらしい)
-      - name: Generate Laravel App Key
-        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: ./vendor/bin/sail artisan key:generate --force
-
+      # MySQL起動確認
       - name: Wait for MySQL
-        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
         # MySQLが接続可能状態になるまで2秒ずつ確認する(60秒間) 
         run: |
           for i in {1..30}; do
-            if ./vendor/bin/sail exec mysql \
-              mysqladmin ping \
-              -h localhost \
-              -u sail \
-              -ppassword \
+            if mysqladmin ping \
+              -h 127.0.0.1 \
+              -u root \
               --silent; then
               echo "MySQL is ready!!"
               exit 0
@@ -61,18 +47,87 @@ jobs:
           echo "MySQL failed to start within 60 seconds..."
           exit 1
 
-      # migration実行
-      - name: Run migration
+      # envファイルをexampleからコピーして作成
+      - name: Setup Laravel Environment
         working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: ./vendor/bin/sail artisan migrate --force
+        run: |
+          cp .env.example .env
+
+      # CI用のDB設定
+      - name: Configure Laravel Database
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: |
+          sed -i '' 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+          sed -i '' 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i '' 's/^DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i '' 's/^DB_DATABASE=.*/DB_DATABASE=laravel/' .env
+          sed -i '' 's/^DB_USERNAME=.*/DB_USERNAME=sail/' .env
+          sed -i '' 's/^DB_PASSWORD=.*/DB_PASSWORD=password/' .env
+
+      # MySQLのデータベース作成
+      - name: Setup Test Database
+        run: |
+          mysql -u root <<'SQL'
+          CREATE DATABASE IF NOT EXISTS laravel;
+
+          CREATE USER IF NOT EXISTS 'sail'@'localhost'
+            IDENTIFIED BY 'password';
+
+          GRANT ALL PRIVILEGES ON laravel.*
+            TO 'sail'@'localhost';
+
+          FLUSH PRIVILEGES;
+          SQL
+
+      # Laravelの依存関係構築 composer.json
+      - name: Install Composer Dependency
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: composer install --no-interaction --prefer-dist
+
+      # APPキー生成 (.env.exampleをコピーしただけだとAPPKEYが空になるらしい)
+      - name: Generate Laravel App Key
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: php artisan key:generate --force
+
+      # migration実行
+      - name: Run Migration
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: php artisan migrate --force
 
       # テスト実行
       - name: Laravel Test
         working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
-        run: ./vendor/bin/sail artisan test
+        run: php artisan test
+      
+      # LaravelのAPI実行開始
+      - name: Start Laravel
+        working-directory: API  # APIフォルダ配下のLaravelプロジェクトを対象にする
+        run: |
+          php artisan serve \
+            --host=127.0.0.1 \
+            --port=8000 \
+            > /tmp/laravel.log 2>&1 &
 
-      # iOSアプリ側のテスト実行
-      - name: EaReader Test
+      # Laravel API起動確認
+      # 8000のポートがサーバーになっているかで判断する
+      - name: Wait for Laravel
+        run: |
+          for i in {1..30}; do
+            if nc -z 127.0.0.1 8000; then
+              echo "Laravel is ready!!"
+              exit 0
+            fi
+      
+            echo "Waiting for Laravel..."
+            sleep 2
+          done
+      
+          echo "Laravel failed to start within 60 seconds..."
+          cat /tmp/laravel.log
+          exit 1
+      
+      # iOS結合テスト
+      - name: EaReader Integration Test
         run: |
           set -o pipefail
 
@@ -84,3 +139,9 @@ jobs:
             -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO \
             test
+
+      # Laravelのログ表示
+      - name: Show Laravel Log
+        if: always()
+        run: |
+          cat /tmp/laravel.log || true
