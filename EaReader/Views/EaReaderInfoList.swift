@@ -15,17 +15,19 @@ struct EaReaderInfoList: View {
             VStack {
                 EaReaderInfoHeader()
                 EaReaderInfo()
-                Divider()
-                VStack {
-                    AppMaintenanceHeader()
-                    DeleteCacheButton {
-                        print("キャッシュ削除ボタン")
-                    }
-                }
+                // メンテナンス機能は、アップデートで対応
+//                Divider()
+//                VStack {
+//                    AppMaintenanceHeader()
+//                    DeleteCacheButton {
+//                        print("キャッシュ削除ボタン")
+//                    }
+//                }
             }
         }
         .scrollDisabled(true)
-        .frame(height: 200)
+//        .frame(height: 200)  // メンテナンスありの場合の高さ
+        .frame(height: 150)
     }
 }
 

@@ -25,6 +25,15 @@ class ArticleService {
         return Article::updateOrCreate(['feed_id' => $feedId, 'id' => $id], $data);
     }
 
+    // 記事データ削除
+    public function deleteArticles(string $feedId) {
+        $articles = Article::where('feed_id', $feedId);
+        $articles->delete();
+        return response()->json([
+            'id' => (int) $feedId
+        ]);
+    }
+
 }
 
 

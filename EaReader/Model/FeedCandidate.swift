@@ -50,8 +50,7 @@ struct FeedCandidate: Identifiable, Hashable {
     var summary: String?
     var iconURL: URL?
     var source: FeedSource
-
-//    var id: String { feedURL.absoluteString }
+    
     var id: UUID = UUID()
 
     static func == (lhs: FeedCandidate, rhs: FeedCandidate) -> Bool {
@@ -68,6 +67,19 @@ struct FeedCandidate: Identifiable, Hashable {
         guard let host = (self.siteURL ?? self.feedURL).host else { return nil }
         return URL(string: "https://www.google.com/s2/favicons?sz=64&domain=\(host)")
     }
+    
+    // 26.08.17 B FeedCandidateからコンバート
+    func convert() -> Feed {
+        let feed = Feed(
+            feedURL: self.feedURL,
+            title: self.title,
+            siteURL: self.siteURL,
+            summary: self.summary,
+            iconURL: self.iconURL,
+            source: self.source.rawValue
+        )
+        return feed
+    }
 }
 
 // パース済みのフィード全体
@@ -76,4 +88,23 @@ struct ParsedFeed {
     var link: URL?
     var description: String?
     var items: [Article] = []
+}
+
+// 26.08.17 B Feed情報 (Feed検索用DBに保存する用)
+struct Feed: AnyJSONType {
+    let feedURL: URL
+    var title: String
+    var siteURL: URL?
+    var summary: String?
+    var iconURL: URL?
+    var source: String
+    
+    enum CodingKeys: String, CodingKey {
+        case feedURL = "feed_url"
+        case title = "title"
+        case siteURL = "site_url"
+        case summary = "summary"
+        case iconURL = "icon_url"
+        case source = "source"
+    }
 }

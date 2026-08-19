@@ -5,7 +5,7 @@
 //  Created by Eisuke Nomoto on 2026/08/08.
 //
 
-import SwiftUI
+import Foundation
 import ComposableArchitecture
 import Combine
 
@@ -133,34 +133,13 @@ struct SearchViewFeature {
                     }
                     await dismiss()
                 }
-                
-//                return .merge(
-//                    .send(.delegate(.updateItem(targetFeed))),
-//                    .run { _ in
-//                        if let jsonEncode = await APISession.jsonEncode(from: userFeed) {
-//                            let urlString = "http://localhost/api/userFeeds"
-//                            let result: Result<UserFeed, SessionErrorType> = await APISession.connect(
-//                                from: urlString,
-//                                data: jsonEncode
-//                            )
-//                            switch result {
-//                            case .success(let feed):
-//                                print("終わりました: \(feed)")
-//                                await dismiss()
-//                            case .failure:
-//                                await dismiss()
-//                            }
-//                        }
-//                        await dismiss()
-//                    }
-//                )
             case .registerAlert(.presented(.cancel)):
                 state.selectedCandidate = nil
                 print("Feed登録をキャンセルしました")
                 return .none
             case .showRegistrationAlert:  // フィード登録エラーアラート
                 state.alertRegistration = .init(title: {
-                    TextState("フィード登録に失敗しました")
+                    TextState("フィードの登録に失敗しました")
                 }, actions: {
                     ButtonState(role: .none, action: .cancel) {
                         TextState("OK")

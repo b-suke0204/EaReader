@@ -5,7 +5,7 @@
 //  Created by Eisuke Nomoto on 2026/08/08.
 //
 
-import SwiftUI
+import Foundation
 import ComposableArchitecture
 
 @Reducer

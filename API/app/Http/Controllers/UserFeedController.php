@@ -61,9 +61,9 @@ class UserFeedController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, UserFeedService $userFeedService)
+    public function destroy(string $id, UserFeedService $userFeedService)
     {
         // UserFeed削除
-        return $userFeedService->deleteUserFeed($request->device_id);
+        return $userFeedService->deleteUserFeed($id);
     }
 }

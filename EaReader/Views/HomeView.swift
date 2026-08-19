@@ -43,6 +43,7 @@ struct HomeView: View {
             }
         }
         .alert(store: homeStore.scope(state: \.$alert, action: \.alert))
+        .alert(store: homeStore.scope(state: \.deleteAlert.$deleteAlert, action: \.deleteAlert.deleteAlert))
         .task {  // 初回起動時読み込み
             homeStore.send(.onAppear)
         }
@@ -76,6 +77,17 @@ struct FeedList: View {
         List {
             ForEach(homeStore.deviceModel?.userFeeds ?? []) { item in
                 FeedListItem(homeStore: homeStore, item: item)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button(action: {
+                            guard let deviceModel = homeStore.deviceModel else { return }
+                            homeStore.send(.deleteAlert(.showDeleteItemAlert(feed: item, device: deviceModel)))
+                        }) {
+                            Image(systemName: "trash")
+                                .resizable()
+                                .scaledToFit()
+                        }
+                        .tint(.red)
+                    }
             }
         }
         .listStyle(.plain)

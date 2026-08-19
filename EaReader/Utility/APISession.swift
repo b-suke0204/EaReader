@@ -22,12 +22,43 @@ enum HTTPMethod: String {
 // 26.08.12 B サーバーエラー種別
 nonisolated enum SessionErrorType: Equatable, Error {
     case success
-    case error(message: String)
+    case error(message: String, code: Int?)
 }
 
 // 26.08.12 B レスポンスエラーメッセージ
 nonisolated struct ErrorResponse: AnyJSONType {
     var message: String
+}
+
+// 26.08.18 B IDのみをJSONで送りたい場合
+nonisolated struct JSONID: AnyJSONType {
+    var id: Int
+}
+
+// 26.08.16 B URL設定 (環境によって変更するために作成)
+enum APIEnvironment {
+    case ci  // ci環境
+    case local  // ローカル環境
+    case production  // 本番
+    
+    func getURL(from environment: Self) -> String {
+        switch environment {
+        case .ci:
+            return "http://127.0.0.1"
+        case .local:
+            return "http://localhost"
+        case .production:
+            return "https://example.com"
+        }
+    }
+}
+
+// エラーメッセージ
+nonisolated struct ResponseMessage {
+    static let fetchURLError: String = "URLの取得に失敗しました"
+    static let decodeError: String = "デコードまたは通信に失敗しました"
+    static let notFoundError: String = "該当データがありませんでした"
+    static let failResponseError: String = "応答がありませんでした"
 }
 
 final class APISession {
@@ -38,7 +69,7 @@ final class APISession {
         httpMethod: HTTPMethod = .GET
     ) async -> Result<T, SessionErrorType> {
         guard let url = URL(string: urlString) else {
-            return .failure(.error(message: "URLの取得に失敗しました"))
+            return .failure(.error(message: ResponseMessage.fetchURLError, code: nil))
         }
         
         var request = URLRequest(url: url)
@@ -59,7 +90,8 @@ final class APISession {
             let jsonData = try decoder.decode(T.self, from: data)
             return .success(jsonData)
         } catch {
-            return .failure(.error(message: error.localizedDescription))
+            print(error.localizedDescription)
+            return .failure(.error(message: ResponseMessage.decodeError, code: nil))
         }
     }
     
@@ -69,7 +101,7 @@ final class APISession {
         httpMethod: HTTPMethod = .GET
     ) async -> Result<[T], SessionErrorType> {
         guard let url = URL(string: urlString) else {
-            return .failure(.error(message: "URLの取得に失敗しました"))
+            return .failure(.error(message: ResponseMessage.fetchURLError, code: nil))
         }
         
         var request = URLRequest(url: url)
@@ -91,8 +123,9 @@ final class APISession {
             let jsonData = try decoder.decode([T].self, from: data)
             return .success(jsonData)
         } catch {
+            print(error.localizedDescription)
             return .failure(
-                .error(message: error.localizedDescription)
+                .error(message: ResponseMessage.decodeError, code: nil)
             )
         }
     }
@@ -105,7 +138,7 @@ final class APISession {
         httpMethod: HTTPMethod = .POST
     ) async -> Result<T, SessionErrorType> {
         guard let url = URL(string: urlString) else {
-            return .failure(.error(message: "URLの取得に失敗しました"))
+            return .failure(.error(message: ResponseMessage.fetchURLError, code: nil))
         }
         
         var request = URLRequest(url: url)
@@ -132,8 +165,8 @@ final class APISession {
             let jsonData = try decoder.decode(T.self, from: responseData)
             return .success(jsonData)
         } catch {
-            print("JSONのデコードまたは通信に失敗しました: \(error)")
-            return .failure(.error(message: error.localizedDescription))
+            print(error.localizedDescription)
+            return .failure(.error(message: ResponseMessage.decodeError, code: nil))
         }
     }
     
@@ -150,20 +183,20 @@ final class APISession {
             return .success
         case 404:
             print("該当データがありませんでした")
-            return getErrorMessage(from: data)
+            return .error(message: ResponseMessage.notFoundError, code: statusCode)
         default:
             print("原因不明のエラー: \(statusCode)")
-            return getErrorMessage(from: data)
+            return getErrorMessage(from: data, code: statusCode)
         }
     }
     
-    nonisolated private static func getErrorMessage(from data: Data?) -> SessionErrorType {
+    nonisolated private static func getErrorMessage(from data: Data?, code: Int) -> SessionErrorType {
         guard let responseData = data,
               let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: responseData)
         else {
-            return .error(message: "リスポンスの取得に失敗しました")
+            return .error(message: ResponseMessage.failResponseError, code: code)
         }
-        return .error(message: errorResponse.message)
+        return .error(message: "\(errorResponse.message)", code: code)
     }
     
     // 26.08.12 B JSONにエンコード

@@ -35,11 +35,11 @@ class UserFeedService {
     }
 
     // ユーザーフィード削除
-    public function deleteUserFeed(string $deviceId) {
-        $userFeed = UserFeed::where('device_id', $deviceId)->first();  // 念の為、DBからIDを取得して確認
+    public function deleteUserFeed(string $id) {
+        $userFeed = UserFeed::where('id', $id)->first();  // 念の為、DBからIDを取得して確認
         if ($userFeed) {
             $userFeed->delete();  // softDeletesなので、論理削除
-            return response()->json(['message' => 'ユーザーフィードを削除しました'], 200);
+            return response()->json(['id' => (int) $id], 200);
         } else {
             return response()->json(['message' => '該当のユーザーフィードがありませんでした'], 404);
         }

@@ -5,7 +5,7 @@
 //  Created by Eisuke Nomoto on 2026/08/04.
 //
 
-import SwiftUI
+import Foundation
 import ComposableArchitecture
 
 enum HomeViewLoadingState {
@@ -21,6 +21,8 @@ struct HomeViewFeature {
     
     @ObservableState
     struct State: Equatable {
+        var deleteAlert = DeleteFeedAlertFeature.State()
+        
         @Presents var destination: Destination.State?  // 画面表示用
         @Presents var alert: AlertState<Action.Alert>?
         var navPath = StackState<Path.State>()
@@ -89,12 +91,19 @@ struct HomeViewFeature {
         case destination(PresentationAction<Destination.Action>)
         case navPath(StackActionOf<Path>)
         
+        case deleteAlert(DeleteFeedAlertFeature.Action)
+        
         public enum Alert: Equatable {
+            case delete(feed: UserFeedModel<UserFeed, Article>)
+            case cancel
             case error(message: String)
         }
     }
     
     var body: some Reducer<State, Action> {
+        Scope(\.deleteAlert, action: \.deleteAlert) {  // 切り出したFeatureを見る
+            DeleteFeedAlertFeature()
+        }
         Reduce { state, action in
             switch action {
             case .onAppear:  // 読み込み中
@@ -109,13 +118,10 @@ struct HomeViewFeature {
                 }
                 
                 // サーバーにデータを保存する
-                //                deviceModel = DeviceMockModel().getMock()
-                
                 // 新規保存の時に使う
                 deviceModel = DeviceModel(device: makeDeviceModel(), userFeeds: [])
                 
                 return .run { send in
-                    
                     if let deviceData: Device = try? await FileUtility.loadDeviceInfo() {
                         let deviceId = deviceData.deviceId
                         let urlString = "http://localhost/api/devices/\(deviceId)"
@@ -123,12 +129,15 @@ struct HomeViewFeature {
                         
                         switch result {
                         case .success(let device):
-                            let deviceModel = DeviceModel<Device, UserFeed, Article>(device: device, userFeeds: [])
+                            let latestDeviceModel = DeviceModel<Device, UserFeed, Article>(
+                                device: device,
+                                userFeeds: []
+                            )
                             // デバイスIDは、端末で共通なので、アプリ全体で共有できるようにする
                             EaReaderConfig.deviceId = device.deviceId
                             print("\(device.deviceId)")
                             print("\(device.articleDisplayCount)")
-                            await send(.deviceModelLoaded(deviceModel))
+                            await send(.deviceModelLoaded(latestDeviceModel))
                             return
                         case .failure:
                             // ファイルがない場合は、新規デバイス登録処理へ移動
@@ -152,7 +161,8 @@ struct HomeViewFeature {
                             print("デバイスが保存されました")
                         case .failure(let error):
                             print("デバイスの保存に失敗しました: \(error)")
-                            
+                            await send(.showLoadingError)
+                            return
                         }
                         
                         do {
@@ -219,7 +229,6 @@ struct HomeViewFeature {
                     
                     for feedModel in feedModels {
                         let feedId = await feedModel.userFeed.id
-                        
                         let urlString = "http://localhost/api/articles/\(feedId)"
                         let result: Result<[Article], SessionErrorType> = await APISession.fetchAll(from: urlString)
                         
@@ -271,7 +280,6 @@ struct HomeViewFeature {
                         let feedId = await model.article.feedId
                         let articleId = await model.article.id
                         let urlString = "http://localhost/api/articles/\(feedId)/\(articleId)"
-                        
                         print("URL: \(urlString)")
                         
                         if let jsonData = await APISession.jsonEncode(from: model.article) {
@@ -304,6 +312,11 @@ struct HomeViewFeature {
                 // SettingViewからdelegateで値を伝播
                 state.deviceModel?.device = device
                 return .none
+            case .deleteAlert(.delegate(.deleteFeedItem(let index))):
+                state.deviceModel?.userFeeds.remove(at: index)
+                return .none
+            case .alert(.presented(.cancel)):  // 削除アラートのキャンセルを押したとき
+                return .none
             case .alert(.presented(.error(let message))):
                 state.alert = .init(title: {
                     TextState(message)
@@ -318,13 +331,14 @@ struct HomeViewFeature {
             }
         }
         .ifLet(\.$destination, action: \.destination)  // destinationを検知
+        .ifLet(\.$alert, action: \.alert)
         .forEach(\.navPath, action: \.navPath)
     }
     
     // 26.08.12 B デバイスモデルを生成
     private func makeDeviceModel() -> Device {
         let device = Device(
-            id: 1,
+            id: 1,  // idは、DBから返ってきたものを使うため、1で問題ない
             deviceId: UUID(),
             lastSeenAt: Date(),
             latestUpdatedAt: Date(),

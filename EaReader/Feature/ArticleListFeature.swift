@@ -5,7 +5,7 @@
 //  Created by Eisuke Nomoto on 2026/08/09.
 //
 
-import SwiftUI
+import Foundation
 import ComposableArchitecture
 import Combine
 
@@ -99,10 +99,31 @@ struct ArticleListFeature {
                         }
                         print("記事ID: \(article.id)")
                     }
+                    
                     if !models.isEmpty {  // 新記事があれば、更新
                         state.targetFeed?.articles.append(contentsOf: models)
                     }
-                    return .none
+                    
+                    // 26.08.17 B ここでFeeds検索用のデータをサーバーに保存する
+                    guard let feed = state.targetFeed?.feedCandidate?.convert() else { return .none }
+                    return .run { _ in
+                        if !articles.isEmpty {
+                            if let jsonEncode = await APISession.jsonEncode(from: feed) {
+                                let urlString = "http://localhost/api/feeds"
+                                let result: Result<Feed, SessionErrorType> = await APISession.connect(
+                                    from: urlString,
+                                    data: jsonEncode
+                                )
+                                // ただの確認で追加 (アプリの使い勝手に関係ないため、ただ確認する用)
+                                switch result {
+                                case .success(let newFeed):
+                                    print(newFeed)
+                                case .failure(let message):
+                                    print("検索用Feedの保存に失敗しました: \(message)")
+                                }
+                            }
+                        }
+                    }
                 case .failure(let error):
                     print("エラーが吐き出されました: \(error)")
                     state.errorMessage = error.localizedDescription

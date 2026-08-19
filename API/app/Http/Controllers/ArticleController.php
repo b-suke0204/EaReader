@@ -61,8 +61,8 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, ArticleService $articleService)
     {
-        //
+        return $articleService->deleteArticles($id);
     }
 }
